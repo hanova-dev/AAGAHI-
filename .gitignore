@@ -1,0 +1,6 @@
+# OS / editor noise not already covered by the per-project .gitignore files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.iml

@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+
+# Pipeline outputs and credentials - never committed
+output/
+service-account*.json
+.env
