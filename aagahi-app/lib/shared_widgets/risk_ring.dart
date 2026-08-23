@@ -12,6 +12,16 @@ import '../features/risk/domain/entities/risk_assessment.dart';
 /// so the farmer sees the slope rather than the score. The rate of decline is
 /// the entire scientific thesis of AAGAHI; the primary visual should carry it.
 ///
+/// Layout, not tuned percentages: the value and caption are measured with a
+/// [TextPainter] at the real [MediaQuery] text scale and font before anything
+/// is positioned, and the trace's plotting band is whatever vertical space is
+/// left over inside the arc once that measured text block and a mandatory
+/// gap are reserved. If the measured caption would not leave room for even a
+/// legible minimum trace band - Nastaliq at 200% scale is the case this
+/// exists for - the caption is pushed below the ring entirely rather than
+/// letting anything overlap or clip. See [captionStyle] for how a caller
+/// exercises real Urdu typography here rather than a placeholder font.
+///
 /// Accessibility: the ring is decorative in the semantic tree. The band, the
 /// value, and the trend are announced through a single composed semantics
 /// label so a screen reader speaks one coherent sentence instead of reading
@@ -24,6 +34,7 @@ class RiskRing extends StatelessWidget {
     required this.semanticsLabel,
     this.size = 200,
     this.caption,
+    this.captionStyle,
     super.key,
   })  : assert(probability >= 0.0 && probability <= 1.0),
         assert(size > 0);
@@ -41,58 +52,174 @@ class RiskRing extends StatelessWidget {
   /// Small label under the value, already localised, e.g. "14-DAY RISK".
   final String? caption;
 
+  /// Overrides the caption's font/height, merged over the built-in default
+  /// (`TextStyle.merge` - fields the caller doesn't set fall back to the
+  /// default). Pass `AppTheme.urdu` for an Urdu caption: its Nastaliq family
+  /// and 2.05 line height are exactly what this widget's layout math has to
+  /// measure and plan around, and a plain Latin style would silently test
+  /// the wrong font.
+  final TextStyle? captionStyle;
+
+  static const _defaultCaptionStyle = TextStyle(
+    letterSpacing: 1.4,
+    color: AppColors.ink3,
+    fontWeight: FontWeight.w600,
+  );
+
+  /// Minimum height for a legible trace: below this the curve's shape stops
+  /// being readable regardless of ring size. Tied to half the app's minimum
+  /// touch target (AppSpacing.minTouchTarget) as a real, reused unit rather
+  /// than a fraction invented for this widget.
+  static const _minTraceBandHeight = AppSpacing.minTouchTarget / 2;
+
+  /// The gap CON-... UI-EXT-07 style requirements imply but don't name: the
+  /// trace and the text block must never be closer than this, at any scale.
+  static const _minGap = AppSpacing.sm;
+  static const _textBlockGap = AppSpacing.xs;
+  static const _bottomMargin = AppSpacing.xs;
+
+  double _measureLineHeight(String text, TextStyle style, TextScaler scaler) {
+    final painter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: TextDirection.ltr,
+      textScaler: scaler,
+      maxLines: 1,
+    )..layout();
+    return painter.height;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Respect the OS font scale, but cap it: beyond ~1.3x the numerals stop
-    // fitting inside the ring and the layout must switch to the text-only
-    // fallback rather than overflow (NFR-USE-005).
-    final scale = MediaQuery.textScalerOf(context).scale(1.0);
-    final useCompactText = scale > 1.3;
+    final textScaler = MediaQuery.textScalerOf(context);
+    // Beyond ~1.3x the numerals alone start crowding the arc; easing the
+    // font size down here reduces how often the caption-eviction fallback
+    // below has to trigger at all. It is a soft measure, not the safety net -
+    // the measured-height computation that follows is what actually
+    // guarantees no overlap or clip.
+    final useCompactText = textScaler.scale(1.0) > 1.3;
+
+    final valueText = '${(probability * 100).round()}%';
+    final valueStyle = TextStyle(
+      fontSize: useCompactText ? size * 0.11 : size * 0.135,
+      fontWeight: FontWeight.w800,
+      letterSpacing: -1,
+      color: AppColors.ink,
+    );
+    final resolvedCaptionStyle = _defaultCaptionStyle
+        .copyWith(fontSize: size * 0.042)
+        .merge(captionStyle);
+
+    final valueHeight = _measureLineHeight(valueText, valueStyle, textScaler);
+    final captionHeight = caption == null
+        ? 0.0
+        : _measureLineHeight(caption!, resolvedCaptionStyle, textScaler);
+
+    // --- ring geometry: driven by width alone, never by text metrics ------
+    const baseHeightRatio = 0.68;
+    final baseHeight = size * baseHeightRatio;
+    final strokeWidth = size * 0.055;
+    final radius = (size - strokeWidth) / 2;
+    final centreDy = baseHeight - strokeWidth / 2;
+    // "Just inside the arc stroke" down to the floor where the arc's two
+    // ends sit - a dimension expressed in the stroke's own width, not a
+    // fraction of the whole widget tuned to look right at one size.
+    final domeInteriorHeight = radius - strokeWidth * 1.2;
+
+    // --- does the caption fit inside the ring at this scale? ---------------
+    final withCaptionHeight = caption == null
+        ? valueHeight
+        : valueHeight + _textBlockGap + captionHeight;
+    final requiredWithCaption =
+        _minTraceBandHeight + _minGap + withCaptionHeight + _bottomMargin;
+    final captionFitsInsideRing =
+        caption == null || domeInteriorHeight >= requiredWithCaption;
+
+    final textBlockHeight = captionFitsInsideRing ? withCaptionHeight : valueHeight;
+    final requiredHeight = _minTraceBandHeight + _minGap + textBlockHeight + _bottomMargin;
+
+    // The dome's own shape never shrinks or grows with text; if the text
+    // block needs more room than the dome interior offers even after taking
+    // every fallback available, the *floor* below the dome grows instead of
+    // letting anything clip.
+    final extraFloorSpace = math.max(0.0, requiredHeight - domeInteriorHeight);
+    final totalRingHeight = baseHeight + extraFloorSpace;
+
+    final traceBandHeight = math.max(
+      _minTraceBandHeight,
+      domeInteriorHeight + extraFloorSpace - _minGap - textBlockHeight - _bottomMargin,
+    );
+    final traceTop = centreDy - radius + strokeWidth * 1.2;
+    final traceBottom = traceTop + traceBandHeight;
+    final textTop = centreDy + extraFloorSpace - _bottomMargin - textBlockHeight;
+
+    final ring = SizedBox(
+      width: size,
+      height: totalRingHeight,
+      child: Stack(
+        children: [
+          CustomPaint(
+            size: Size(size, totalRingHeight),
+            painter: _RiskRingPainter(
+              probability: probability,
+              bandColor: AppColors.forBand(band),
+              trace: trace,
+              trackColor: AppColors.edge,
+              centre: Offset(size / 2, centreDy),
+              radius: radius,
+              strokeWidth: strokeWidth,
+              traceTop: traceTop,
+              traceBottom: traceBottom,
+            ),
+          ),
+          Positioned(
+            top: textTop,
+            left: 0,
+            right: 0,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  valueText,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.visible,
+                  style: valueStyle,
+                ),
+                if (captionFitsInsideRing && caption != null) ...[
+                  const SizedBox(height: _textBlockGap),
+                  Text(
+                    caption!,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    softWrap: false,
+                    overflow: TextOverflow.visible,
+                    style: resolvedCaptionStyle,
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
 
     return Semantics(
       label: semanticsLabel,
       excludeSemantics: true,
-      child: SizedBox(
-        width: size,
-        height: size * 0.68,
-        child: CustomPaint(
-          painter: _RiskRingPainter(
-            probability: probability,
-            bandColor: AppColors.forBand(band),
-            trace: trace,
-            trackColor: AppColors.edge,
-          ),
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.only(top: size * 0.14),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '${(probability * 100).round()}%',
-                    style: TextStyle(
-                      fontSize: useCompactText ? size * 0.11 : size * 0.135,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -1,
-                      color: AppColors.ink,
-                    ),
-                  ),
-                  if (caption != null)
-                    Text(
-                      caption!,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: size * 0.042,
-                        letterSpacing: 1.4,
-                        color: AppColors.ink3,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                ],
-              ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ring,
+          if (!captionFitsInsideRing && caption != null) ...[
+            const SizedBox(height: _textBlockGap),
+            Text(
+              caption!,
+              textAlign: TextAlign.center,
+              style: resolvedCaptionStyle,
             ),
-          ),
-        ),
+          ],
+        ],
       ),
     );
   }
@@ -104,12 +231,26 @@ class _RiskRingPainter extends CustomPainter {
     required this.bandColor,
     required this.trace,
     required this.trackColor,
+    required this.centre,
+    required this.radius,
+    required this.strokeWidth,
+    required this.traceTop,
+    required this.traceBottom,
   });
 
   final double probability;
   final Color bandColor;
   final List<TracePoint> trace;
   final Color trackColor;
+  final Offset centre;
+  final double radius;
+  final double strokeWidth;
+
+  /// The trace's plotting band, already computed in [RiskRing.build] from
+  /// the measured text block height so it can never collide with the
+  /// numerals or caption below it.
+  final double traceTop;
+  final double traceBottom;
 
   /// Semicircle sweep, drawn from 180 degrees clockwise through 180 degrees.
   static const double _startAngle = math.pi;
@@ -117,9 +258,6 @@ class _RiskRingPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final strokeWidth = size.width * 0.055;
-    final radius = (size.width - strokeWidth) / 2;
-    final centre = Offset(size.width / 2, size.height - strokeWidth / 2);
     final rect = Rect.fromCircle(center: centre, radius: radius);
 
     // --- track ---------------------------------------------------------
@@ -149,15 +287,10 @@ class _RiskRingPainter extends CustomPainter {
     canvas.drawArc(rect, _startAngle, sweep, false, valuePaint);
 
     // --- the trace: this is the part that matters -----------------------
-    _paintTrace(canvas, centre, radius, strokeWidth);
+    _paintTrace(canvas);
   }
 
-  void _paintTrace(
-    Canvas canvas,
-    Offset centre,
-    double radius,
-    double strokeWidth,
-  ) {
+  void _paintTrace(Canvas canvas) {
     if (trace.length < 2) return;
 
     final percentiles = trace.map((p) => p.percentile).toList(growable: false);
@@ -171,13 +304,10 @@ class _RiskRingPainter extends CustomPainter {
         ? (double _) => 0.5
         : (double value) => (value - minimum) / span;
 
-    // Inset the plotting area well inside the arc so the trace never collides
-    // with the stroke or the numerals.
     final plotWidth = radius * 1.05;
-    final plotHeight = radius * 0.42;
     final left = centre.dx - plotWidth / 2;
-    final bottom = centre.dy - strokeWidth * 1.1;
-    final top = bottom - plotHeight;
+    final bottom = traceBottom;
+    final top = traceTop;
 
     final path = Path();
     for (var i = 0; i < trace.length; i++) {
@@ -216,6 +346,8 @@ class _RiskRingPainter extends CustomPainter {
       oldDelegate.probability != probability ||
       oldDelegate.bandColor != bandColor ||
       oldDelegate.trackColor != trackColor ||
+      oldDelegate.traceTop != traceTop ||
+      oldDelegate.traceBottom != traceBottom ||
       !identical(oldDelegate.trace, trace);
 }
 
