@@ -51,6 +51,35 @@ final class InMemoryLocalisations implements AppLocalisations {
       en: 'Irrigate now if you can',
       ur: 'اگر ممکن ہو تو ابھی پانی دیں',
     ),
+    // C3 - not scorable (screens_v2.html flow C)
+    'failure.notScorable': (
+      en: 'We cannot tell you today',
+      ur: 'آج ہم آپ کو نہیں بتا سکتے',
+    ),
+    'notScorable.insufficientCoverage': (
+      en: 'The satellite that measures soil moisture has not sent usable '
+          'data for your area in four days. Clouds are the usual reason.',
+      ur: 'آپ کے علاقے کے لیے مٹی کی نمی ناپنے والا سیٹلائٹ چار دن سے '
+          'قابلِ استعمال ڈیٹا نہیں بھیج رہا۔ عام طور پر بادل اس کی وجہ ہوتے ہیں۔',
+    ),
+    'action.seeDistrictWarning': (
+      en: 'See district warning instead',
+      ur: 'اس کے بجائے ضلعی وارننگ دیکھیں',
+    ),
+    // C4 - offline / stale (screens_v2.html flow C)
+    'offline.noInternetTitle': (en: 'No internet.', ur: 'انٹرنیٹ نہیں ہے۔'),
+    'offline.noInternetBody': (
+      en: 'Showing what we last received.',
+      ur: 'ہم نے آخری بار جو معلومات وصول کیں وہ دکھا رہے ہیں۔',
+    ),
+    'offline.staleWarningBanner': (
+      en: 'Conditions may have changed since this reading. Connect when you can.',
+      ur: 'اس ریڈنگ کے بعد حالات بدل چکے ہوں گے۔ جب ممکن ہو انٹرنیٹ سے جڑیں۔',
+    ),
+    'common.daysOld': (en: 'days old', ur: 'دن پرانا'),
+    'common.asOf': (en: 'AS OF', ur: 'بمطابق'),
+    'common.saved': (en: 'saved', ur: 'محفوظ شدہ'),
+    'action.tryToConnect': (en: 'Try to connect', ur: 'جڑنے کی کوشش کریں'),
   };
 
   @override
@@ -86,11 +115,13 @@ final class InMemoryLocalisations implements AppLocalisations {
   String get degradedInputsNote =>
       _ur ? 'کچھ اعداد و شمار کا تخمینہ لگایا گیا ہے' : 'Some readings were estimated';
 
+  // Exact copy from screens_v2.html C3, not paraphrased - this sentence is
+  // the product's ethical position stated to the user, verbatim.
   @override
   String get notGuessingExplanation => _ur
-      ? 'ہم صرف وہی بتاتے ہیں جو سیٹلائٹ واقعی دکھاتے ہیں۔ معلومات کافی نہ ہوں تو ہم اندازہ نہیں لگاتے۔'
-      : 'We only tell you what the satellites actually show. If there is not '
-          'enough data, we say so instead of guessing.';
+      ? 'ہم آپ کو کم خطرہ نہیں دکھا رہے۔ ہم کچھ نہیں دکھا رہے، کیونکہ ہم صرف اندازہ لگا رہے ہوں گے۔'
+      : 'We are not showing you a low score. We are showing you nothing, '
+          'because we would be guessing.';
 
   /// The exact "farmer-facing Urdu framing" column from the SRS (Appendix
   /// B: Risk Band Definitions) - not phrases invented for this file.
