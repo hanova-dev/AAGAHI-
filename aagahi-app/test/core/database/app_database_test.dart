@@ -87,4 +87,65 @@ void main() {
       await wrongKeyOpen.close();
     },
   );
+
+  // The test above proves SQLCipher is active in-process: it opens a real
+  // handle with the right key and a wrong one. That is a runtime-config
+  // check, not proof about the artifact - a correctly-keyed handle passes
+  // it regardless of what's actually on disk. NFR-SEC-002 is about the
+  // file, so this reads the raw bytes directly, with no SQLite API in the
+  // path, and checks for the two things that would only be present in a
+  // plaintext (or plaintext-header) file.
+  const marker = 'PLAINTEXT_CANARY_3f8a9c2b1d7e';
+  // SQLite's fixed 16-byte magic string at offset 0 of every unencrypted
+  // database file (the newline is literal, the final byte is 0x00).
+  const sqliteMagicHeader = 'SQLite format 3\u0000';
+
+  Future<String> writeMarkerAndReadRawFile(String? key) async {
+    final db = key == null
+        ? AppDatabase(NativeDatabase(dbFile))
+        : openWithKey(key);
+    await db.into(db.riskAssessmentRows).insertOnConflictUpdate(
+          RiskAssessmentRowsCompanion.insert(
+            parcelId: 'p1',
+            assessedOn: DateTime.utc(2026, 8, 23),
+            payload: '{"marker":"$marker"}',
+          ),
+        );
+    await db.close();
+    final bytes = await dbFile.readAsBytes();
+    return String.fromCharCodes(bytes);
+  }
+
+  test(
+    'sanity check: an UNencrypted database DOES expose the plaintext '
+    'payload and the SQLite header in its raw bytes',
+    () async {
+      // Proves the two assertions below are actually discriminating,
+      // rather than being trivially false for an unrelated reason (wrong
+      // marker, wrong encoding, reading the wrong file).
+      final content = await writeMarkerAndReadRawFile(null);
+      expect(content.contains(marker), isTrue);
+      expect(content.contains(sqliteMagicHeader), isTrue);
+    },
+  );
+
+  test(
+    'the raw on-disk bytes of an encrypted database contain neither the '
+    'plaintext payload nor the standard SQLite header - proving the '
+    'encryption is real at the file level, not just checked at open()',
+    () async {
+      final content = await writeMarkerAndReadRawFile('correct-passphrase');
+
+      expect(
+        content.contains(marker),
+        isFalse,
+        reason: 'the plaintext payload must not appear anywhere in the file bytes',
+      );
+      expect(
+        content.contains(sqliteMagicHeader),
+        isFalse,
+        reason: 'an encrypted file must not start with the standard SQLite header',
+      );
+    },
+  );
 }
