@@ -22,17 +22,16 @@ dependencies:
   dartz: ^0.10.1
   equatable: ^2.0.5
 
-  # Local persistence. Drift over raw sqflite for type-safe queries;
-  # sqlcipher_flutter_libs supplies encryption at rest (NFR-SEC-002).
-  #
-  # sqlite3_flutter_libs and sqlcipher_flutter_libs are alternatives, not
-  # additions - both bundle an Android plugin class of the same name
-  # (eu.simonbinder.sqlite3_flutter_libs.Sqlite3FlutterLibsPlugin), and
-  # depending on both fails the release/debug dex merge with "Type ... is
-  # defined multiple times" (verified via `flutter run`). NFR-SEC-002 requires
-  # encryption at rest, so sqlcipher_flutter_libs is the one that stays.
+  # Local persistence. Drift over raw sqflite for type-safe queries.
+  # Encryption at rest (NFR-SEC-002) comes from sqlite3's own SQLCipher
+  # build, selected below via `hooks.user_defines` - NOT sqlcipher_flutter_libs,
+  # which sqlite3's own upgrade guide says is "no longer necessary after
+  # upgrading to drift 2.32.0" and whose runtime open.overrideFor/
+  # OperatingSystem API no longer exists in sqlite3 3.x at all (verified via
+  # `flutter analyze`: the import doesn't resolve). sqlite3_flutter_libs is
+  # obsolete for the same reason and was already removed earlier.
   drift: ^2.18.0
-  sqlcipher_flutter_libs: ^0.6.1
+  sqlite3: ^3.4.0
   path_provider: ^2.1.3
   path: ^1.9.0
 
@@ -69,6 +68,14 @@ dev_dependencies:
   mocktail: ^1.0.4
   drift_dev: ^2.18.0
   build_runner: ^2.4.11
+
+# Selects the SQLCipher-enabled sqlite3 build at compile time via Dart's
+# native build hooks, replacing the deprecated sqlcipher_flutter_libs
+# package (NFR-SEC-002). See core/database/app_database.dart.
+hooks:
+  user_defines:
+    sqlite3:
+      source: sqlcipher
 
 flutter:
   uses-material-design: true

@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../data/datasources/risk_local_data_source.dart';
+import '../../data/repositories/risk_repository_impl.dart' show NetworkInfo;
 import '../../domain/entities/risk_assessment.dart';
 import '../../domain/repositories/risk_repository.dart';
 import '../../domain/usecases/get_risk_assessment.dart';
@@ -9,8 +11,31 @@ import '../../domain/usecases/get_risk_assessment.dart';
 /// unimplemented here so the presentation layer never constructs its own
 /// dependencies - that is what keeps widget tests free of real HTTP and a
 /// real database.
+///
+/// Still unimplemented outside `--dart-define=DEMO=true` as of Phase 1: a
+/// real RiskRepositoryImpl needs a RiskRemoteDataSource, which does not
+/// exist yet (no backend has been built). Wiring the two providers below
+/// with real implementations while leaving this one unwired is deliberate,
+/// not an oversight - see [riskLocalDataSourceProvider] and
+/// [networkInfoProvider].
 final riskRepositoryProvider = Provider<RiskRepository>(
   (ref) => throw UnimplementedError('Override riskRepositoryProvider at startup'),
+);
+
+/// Real outside demo mode as of Phase 1 (Drift + SQLCipher, see
+/// core/database/app_database.dart) - overridden in main.dart with an
+/// already-open [RiskLocalDataSourceImpl]. Exists as its own provider,
+/// separate from [riskRepositoryProvider], because the local half of the
+/// offline-first stack is buildable and testable now; the remote half is
+/// not.
+final riskLocalDataSourceProvider = Provider<RiskLocalDataSource>(
+  (ref) => throw UnimplementedError('Override riskLocalDataSourceProvider at startup'),
+);
+
+/// Real outside demo mode as of Phase 1 (connectivity_plus, see
+/// core/network/network_info_impl.dart).
+final networkInfoProvider = Provider<NetworkInfo>(
+  (ref) => throw UnimplementedError('Override networkInfoProvider at startup'),
 );
 
 final getRiskAssessmentProvider = Provider<GetRiskAssessment>(

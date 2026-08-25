@@ -1,9 +1,14 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/database/app_database.dart';
+import 'core/database/database_key.dart';
+import 'core/network/network_info_impl.dart';
 import 'core/theme/app_theme.dart';
 import 'demo/demo_localisations.dart';
 import 'demo/demo_risk_repository.dart';
+import 'features/risk/data/datasources/risk_local_data_source_impl.dart';
 import 'features/risk/presentation/providers/risk_providers.dart';
 import 'features/risk/presentation/screens/risk_dashboard_screen.dart';
 
@@ -13,28 +18,43 @@ const _isDemo = bool.fromEnvironment('DEMO');
 
 /// Composition root.
 ///
-/// Outside of `--dart-define=DEMO=true`, wires no provider overrides:
-/// `riskRepositoryProvider` and `localisationProvider` (in
-/// `risk_providers.dart`) still throw `UnimplementedError` until the local
-/// database, network layer, and localisation exist (CLAUDE.md kickoff
-/// Phase 1). A fake override there by default would make the app appear to
-/// run while hiding exactly how much is unbuilt - a missing dependency
-/// should fail loudly at the point of use, not quietly return placeholder
-/// data. `DEMO=true` is the one, explicit, opt-in exception: `main.dart`
-/// itself is the only place that knows the seeded repository exists, and it
-/// is unreachable unless that flag is passed on the command line.
-void main() {
-  runApp(
-    ProviderScope(
-      overrides: _isDemo
-          ? [
-              riskRepositoryProvider.overrideWithValue(DemoRiskRepository()),
-              localisationProvider.overrideWithValue(const DemoLocalisations()),
-            ]
-          : const [],
-      child: const AagahiApp(),
-    ),
-  );
+/// Outside of `--dart-define=DEMO=true`, `riskRepositoryProvider` still
+/// throws `UnimplementedError`: a real `RiskRepositoryImpl` needs a
+/// `RiskRemoteDataSource`, and no backend exists yet (Phase 2+). That is
+/// deliberate, not a gap to paper over with a fake remote - a missing
+/// dependency should fail loudly at the point of use, not quietly return
+/// placeholder data.
+///
+/// `riskLocalDataSourceProvider` and `networkInfoProvider` ARE real outside
+/// demo mode as of Phase 1 (Drift+SQLCipher, connectivity_plus) - opening
+/// the encrypted database is the one reason `main` is async now.
+///
+/// `DEMO=true` is the opt-in exception to all of the above: it skips the
+/// database and secure storage entirely and overrides the full repository
+/// with the seeded fake.
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final overrides = <Override>[];
+  if (_isDemo) {
+    overrides.addAll([
+      riskRepositoryProvider.overrideWithValue(DemoRiskRepository()),
+      localisationProvider.overrideWithValue(const DemoLocalisations()),
+    ]);
+  } else {
+    final key = await const DatabaseKeyProvider().getOrCreateKey();
+    final database = AppDatabase(openEncryptedExecutor(encryptionKey: key));
+    overrides.addAll([
+      riskLocalDataSourceProvider.overrideWithValue(
+        RiskLocalDataSourceImpl(database),
+      ),
+      networkInfoProvider.overrideWithValue(
+        NetworkInfoImpl(Connectivity()),
+      ),
+    ]);
+  }
+
+  runApp(ProviderScope(overrides: overrides, child: const AagahiApp()));
 }
 
 class AagahiApp extends StatelessWidget {
