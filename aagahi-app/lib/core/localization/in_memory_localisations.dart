@@ -1,36 +1,38 @@
 import 'package:intl/intl.dart';
 
-import '../features/risk/domain/entities/risk_assessment.dart';
-import '../features/risk/presentation/providers/risk_providers.dart';
+import '../../features/risk/domain/entities/risk_assessment.dart';
+import '../../features/risk/presentation/providers/risk_providers.dart';
 
-/// Which locale [DemoLocalisations] renders.
+/// Which locale [InMemoryLocalisations] renders.
 ///
 /// Not the three production locales (en / ur / ur-Roman - UI-EXT-02): this
-/// is a two-value demo stand-in, chosen to be trivial to construct from
-/// `main.dart` without a locale-switcher UI, which is out of scope here.
-enum DemoLocale { en, ur }
+/// is a two-value stand-in, chosen to be trivial to construct without a
+/// locale-switcher UI, which is out of scope here.
+enum BuiltinLocale { en, ur }
 
-/// Minimal, hand-written, in-memory [AppLocalisations] for the demo build.
+/// Minimal, hand-written, in-memory [AppLocalisations].
 ///
 /// This is deliberately not the ARB/`flutter_localizations` pipeline
-/// FR-LOCL-001 ultimately requires - it exists to unblock
-/// `RiskDashboardScreen` under `--dart-define=DEMO=true` nine days before a
-/// deadline, nothing more. It implements every member of the interface
-/// (the screen references all of them), but the string map inside
-/// `translate()` covers only the keys [DemoRiskRepository]'s scenario
-/// actually produces (three driver narratives, one advisory title) - not a
-/// general-purpose translation table.
+/// FR-LOCL-001 ultimately requires. It exists so neither build variant is
+/// ever one `ref.watch(localisationProvider)` away from a hard crash before
+/// that pipeline is built - see `main.dart`, which wires this for both
+/// `--dart-define=DEMO=true` and the real (Drift+remote) composition root.
+/// The string map inside `translate()` covers only the keys this app's
+/// current seeded/demo content actually produces, not a general-purpose
+/// translation table - `translate()` returns the raw key for anything else
+/// rather than throwing (see its doc comment for why that matters).
 ///
 /// The Urdu band framings in [bandLabel] are the exact "farmer-facing Urdu
 /// framing" strings from the SRS (Appendix B), not phrases invented for
-/// this file. Everything else in Urdu here is unreviewed demo copy - do not
-/// treat it as satisfying FR-EXPL-005's native-speaker review requirement.
-final class DemoLocalisations implements AppLocalisations {
-  const DemoLocalisations([this.locale = DemoLocale.ur]);
+/// this file. Everything else in Urdu here is unreviewed placeholder copy -
+/// do not treat it as satisfying FR-EXPL-005's native-speaker review
+/// requirement, and do not ship it to real farmers as final narration text.
+final class InMemoryLocalisations implements AppLocalisations {
+  const InMemoryLocalisations([this.locale = BuiltinLocale.ur]);
 
-  final DemoLocale locale;
+  final BuiltinLocale locale;
 
-  bool get _ur => locale == DemoLocale.ur;
+  bool get _ur => locale == BuiltinLocale.ur;
 
   static const _translations = <String, ({String en, String ur})>{
     'driver.evaporativeDemand': (
@@ -54,10 +56,13 @@ final class DemoLocalisations implements AppLocalisations {
   @override
   String translate(String key) {
     final entry = _translations[key];
-    // Fall back to the raw key rather than throwing: FR-LOCL-001 prohibits
-    // this in production ("no untranslated fallback strings"), but this is
-    // demo-only code and a visible missing-key marker is more useful here
-    // than a crash.
+    // Falls back to the raw key rather than throwing, deliberately, even
+    // though FR-LOCL-001 prohibits an untranslated fallback in the shipped
+    // ARB pipeline: a visible key like "advisory.someNewThing" is a bug
+    // that is immediately visible and fixable. Throwing here turns "one
+    // string is missing" into "the screen is dead," which is exactly what
+    // this project's own constitution rules out for a missing *reading* -
+    // the same principle applies to a missing *label*.
     if (entry == null) return key;
     return _ur ? entry.ur : entry.en;
   }
