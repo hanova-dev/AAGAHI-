@@ -8,6 +8,7 @@ import '../../../../shared_widgets/listen_pill.dart';
 import '../../../../shared_widgets/risk_ring.dart';
 import '../../domain/entities/risk_assessment.dart';
 import '../providers/risk_providers.dart';
+import 'causal_explanation_screen.dart';
 import 'not_scorable_view.dart';
 import 'parcel_switcher_view.dart';
 import 'stale_assessment_view.dart';
@@ -227,39 +228,55 @@ class _DriverList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (assessment.drivers.isEmpty) return const SizedBox.shrink();
 
-    return GlassCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(l10n.whyIsItDrying, style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(height: AppSpacing.sm),
-          for (final driver in assessment.drivers)
-            Padding(
-              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    // Narrative key, never the raw SHAP value (FR-EXPL-007).
-                    l10n.translate(driver.narrativeKey),
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 6),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(99),
-                    child: LinearProgressIndicator(
-                      value: driver.relativeWeight,
-                      minHeight: 7,
-                      backgroundColor: AppColors.edge,
-                      valueColor: AlwaysStoppedAnimation(
-                        AppColors.forBand(assessment.band),
+    return InkWell(
+      // D1 (CausalExplanationScreen) has no entrance point of its own -
+      // matching how C2 is only reachable via C1's parcel header.
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => CausalExplanationScreen(assessment: assessment),
+        ),
+      ),
+      borderRadius: BorderRadius.circular(AppRadii.md),
+      child: GlassCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(l10n.whyIsItDrying, style: Theme.of(context).textTheme.bodySmall),
+                const Icon(Icons.chevron_right, size: 16, color: AppColors.ink3),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            for (final driver in assessment.drivers)
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      // Narrative key, never the raw SHAP value (FR-EXPL-007).
+                      l10n.translate(driver.narrativeKey),
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 6),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(99),
+                      child: LinearProgressIndicator(
+                        value: driver.relativeWeight,
+                        minHeight: 7,
+                        backgroundColor: AppColors.edge,
+                        valueColor: AlwaysStoppedAnimation(
+                          AppColors.forBand(assessment.band),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

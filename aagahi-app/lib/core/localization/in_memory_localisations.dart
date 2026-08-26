@@ -47,6 +47,14 @@ final class InMemoryLocalisations implements AppLocalisations {
       en: 'Rainfall over the last month has been below normal.',
       ur: 'پچھلے مہینے بارش معمول سے کم رہی ہے۔',
     ),
+    // D1 - footnote shown only under the top-ranked driver card, and only
+    // when that driver is evaporative demand - exact copy from
+    // screens_v2.html flow D, paired with the one driver it actually
+    // describes ("the air itself is thirsty").
+    'driver.evaporativeDemand.footnote': (
+      en: 'This is not about rain. The air itself is thirsty.',
+      ur: 'یہ بارش کے بارے میں نہیں ہے۔ ہوا خود پیاسی ہے۔',
+    ),
     'advisory.irrigateNow': (
       en: 'Irrigate now if you can',
       ur: 'اگر ممکن ہو تو ابھی پانی دیں',
@@ -123,6 +131,30 @@ final class InMemoryLocalisations implements AppLocalisations {
     'action.iHaveHeardThis': (en: 'I have heard this', ur: 'میں نے یہ سن لیا ہے'),
     'action.acknowledged': (en: 'Acknowledged', ur: 'تصدیق ہو گئی'),
     'action.whyIsItDrying': (en: 'Why is it drying?', ur: 'یہ کیوں خشک ہو رہا ہے؟'),
+    // D1 - causal explanation (screens_v2.html flow D)
+    'driverRank.biggest': (en: 'Biggest cause', ur: 'سب سے بڑی وجہ'),
+    'driverRank.second': (en: 'Second cause', ur: 'دوسری وجہ'),
+    'driverRank.third': (en: 'Third cause', ur: 'تیسری وجہ'),
+    'causal.closingBanner': (
+      en: 'Rainfall alone would not have warned you. The speed of drying is '
+          'what raised this.',
+      ur: 'صرف بارش کی کمی آپ کو خبردار نہ کرتی۔ خشک ہونے کی رفتار نے یہ '
+          'وارننگ جاری کروائی ہے۔',
+    ),
+    'action.view14DayTrend': (en: 'View 14-day trend', ur: '14 دن کا رجحان دیکھیں'),
+    // D2 - 14-day trace (screens_v2.html flow D)
+    'trace.title': (en: 'Last 14 days', ur: 'پچھلے 14 دن'),
+    'trace.soilMoisturePercentile': (
+      en: 'Soil moisture percentile',
+      ur: 'مٹی کی نمی کا فیصد درجہ',
+    ),
+    'trace.fiveDayFall': (en: '5-day fall', ur: '5 دن میں کمی'),
+    'trace.fourteenDayFall': (en: '14-day fall', ur: '14 دن میں کمی'),
+    'trace.rapidDryingBanner': (
+      en: 'A fall of 20 points or more inside two weeks is what we call '
+          'rapid drying.',
+      ur: 'دو ہفتوں میں 20 یا زیادہ پوائنٹس کی کمی کو ہم تیز خشکی کہتے ہیں۔',
+    ),
     // C4 - offline / stale (screens_v2.html flow C)
     'offline.noInternetTitle': (en: 'No internet.', ur: 'انٹرنیٹ نہیں ہے۔'),
     'offline.noInternetBody': (

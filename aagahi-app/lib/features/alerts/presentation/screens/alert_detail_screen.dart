@@ -100,9 +100,12 @@ class AlertDetailScreen extends ConsumerWidget {
                 child: Text(l10n.translate('action.iHaveHeardThis')),
               ),
             const SizedBox(height: AppSpacing.sm),
-            // Disabled, not wired: D1 ("why is it drying") is the next
-            // item planned, not yet built. Rendered for visual parity with
-            // the reference without pretending it navigates anywhere yet.
+            // Disabled, not wired: D1 ("why is it drying") now exists
+            // (CausalExplanationScreen, reachable from C1's causal panel),
+            // but Alert carries no parcelId/RiskAssessment link to open it
+            // from here - that is an Alert-entity change, out of scope for
+            // this item. Rendered for visual parity with the reference
+            // without pretending it navigates anywhere yet.
             OutlinedButton(
               onPressed: null,
               child: Text(l10n.translate('action.whyIsItDrying')),

@@ -61,6 +61,13 @@ dependencies:
   # constraint fails dependency resolution outright.
   intl: ^0.20.2
 
+  # Charts (D2's 14-day trace). Per CLAUDE.md's package table: no chart
+  # package draws a trace inside a gauge arc, which is why RiskRing stays a
+  # hand-rolled CustomPainter, but a plain line chart is exactly what
+  # fl_chart is for - a second hand-rolled CustomPainter here would be the
+  # "stop and justify it" case the same rule warns about.
+  fl_chart: ^0.69.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
