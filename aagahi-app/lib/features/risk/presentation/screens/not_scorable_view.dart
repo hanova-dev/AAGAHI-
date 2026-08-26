@@ -6,7 +6,6 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../shared_widgets/glass_card.dart';
 import '../../../../shared_widgets/listen_pill.dart';
 import '../providers/risk_providers.dart';
-import 'district_warning_view.dart';
 
 /// Screen C3 (screens_v2.html flow C) - the satellite gave us nothing for
 /// this parcel, so we say so instead of guessing.
@@ -83,10 +82,12 @@ class NotScorableView extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: AppSpacing.lg),
+        // Disabled, not wired: cut for the deadline (agreed 2026-08-26) -
+        // there is no district-aggregate feature built yet (out of scope,
+        // officer console). Rendered for visual parity with the reference
+        // without pretending it does something.
         OutlinedButton(
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute<void>(builder: (_) => const DistrictWarningView()),
-          ),
+          onPressed: null,
           child: Text(l10n.translate('action.seeDistrictWarning')),
         ),
       ],

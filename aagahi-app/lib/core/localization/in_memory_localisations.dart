@@ -66,14 +66,6 @@ final class InMemoryLocalisations implements AppLocalisations {
       en: 'See district warning instead',
       ur: 'اس کے بجائے ضلعی وارننگ دیکھیں',
     ),
-    // District warning (target of C3's button)
-    'district.title': (en: 'District warning', ur: 'ضلعی وارننگ'),
-    'district.explanation': (
-      en: 'This is the general risk for your district, based on nearby '
-          'grid cells. It is not specific to your field.',
-      ur: 'یہ آپ کے ضلعے کا عمومی خطرہ ہے، قریبی علاقوں کی بنیاد پر۔ یہ '
-          'خاص طور پر آپ کے کھیت کے لیے نہیں ہے۔',
-    ),
     // C2 - parcel switcher
     'parcels.yourFields': (en: 'Your fields', ur: 'آپ کے کھیت'),
     'parcels.addAnother': (en: '+ Add another field', ur: '+ ایک اور کھیت شامل کریں'),
