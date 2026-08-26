@@ -155,6 +155,63 @@ final class InMemoryLocalisations implements AppLocalisations {
           'rapid drying.',
       ur: 'دو ہفتوں میں 20 یا زیادہ پوائنٹس کی کمی کو ہم تیز خشکی کہتے ہیں۔',
     ),
+    // D3 - what to do (screens_v2.html flow D)
+    'advisory.cutWeedsAndMulch': (
+      en: 'Cut the weeds and cover the rows',
+      ur: 'جڑی بوٹیاں کاٹیں اور قطاروں کو ڈھانپیں',
+    ),
+    'advisory.cutWeedsAndMulch.body': (
+      en: 'Weeds drink the same water as your wheat. Removing them and '
+          'laying stubble over the soil slows the loss you are seeing.',
+      ur: 'جڑی بوٹیاں بھی وہی پانی پیتی ہیں جو آپ کی گندم پیتی ہے۔ انہیں '
+          'ہٹانے اور مٹی پر بھوسا بچھانے سے یہ نمی کا نقصان سست ہو جاتا ہے۔',
+    ),
+    'advisory.whyNotIrrigation': (en: 'Why not irrigation?', ur: 'آبپاشی کیوں نہیں؟'),
+    'advisory.whyNotIrrigation.body': (
+      en: 'You told us this field is rain-fed. We will not ask you to do '
+          'something you have no water for.',
+      ur: 'آپ نے بتایا تھا کہ یہ کھیت بارانی ہے۔ ہم آپ سے وہ کام کرنے کو '
+          'نہیں کہیں گے جس کے لیے آپ کے پاس پانی نہیں ہے۔',
+    ),
+    'action.iHaveDoneThis': (en: 'I have done this', ur: 'میں نے یہ کر لیا ہے'),
+    'action.done': (en: 'Done', ur: 'ہو گیا'),
+    // D4 - how sure are we (screens_v2.html flow D)
+    'confidence.title': (
+      en: "Confidence in today's warning",
+      ur: 'آج کی وارننگ پر ہمارا یقین',
+    ),
+    'confidence.explanationDegraded': (
+      en: "Some of today's measurements were estimated because of cloud "
+          'cover or a missed satellite pass.',
+      ur: 'آج کی کچھ پیمائشیں بادلوں یا سیٹلائٹ کے نہ گزرنے کی وجہ سے '
+          'تخمینہ لگا کر حاصل کی گئیں۔',
+    ),
+    'confidence.explanationComplete': (
+      en: 'All the measurements this warning needed were available today.',
+      ur: 'اس وارننگ کے لیے درکار تمام پیمائشیں آج دستیاب تھیں۔',
+    ),
+    'confidence.cannotDoTitle': (
+      en: 'What this warning cannot do',
+      ur: 'یہ وارننگ کیا نہیں کر سکتی',
+    ),
+    'confidence.cannotDo.rain': (
+      en: 'It cannot tell you if it will rain',
+      ur: 'یہ نہیں بتا سکتی کہ بارش ہو گی یا نہیں',
+    ),
+    'confidence.cannotDo.cropFailure': (
+      en: 'It cannot promise your crop will fail',
+      ur: 'یہ یہ ضمانت نہیں دے سکتی کہ آپ کی فصل خراب ہو جائے گی',
+    ),
+    'confidence.cannotDo.wrongBefore': (
+      en: 'It has been wrong before and will be wrong again',
+      ur: 'یہ پہلے بھی غلط ثابت ہوئی ہے اور آئندہ بھی ہو سکتی ہے',
+    ),
+    'confidence.districtAdvisoryBanner': (
+      en: 'Also check the district advisory from the Agriculture Department '
+          'before a costly decision.',
+      ur: 'کوئی مہنگا فیصلہ کرنے سے پہلے محکمہ زراعت کی ضلعی ایڈوائزری بھی '
+          'ضرور دیکھیں۔',
+    ),
     // C4 - offline / stale (screens_v2.html flow C)
     'offline.noInternetTitle': (en: 'No internet.', ur: 'انٹرنیٹ نہیں ہے۔'),
     'offline.noInternetBody': (

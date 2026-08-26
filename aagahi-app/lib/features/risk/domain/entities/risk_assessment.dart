@@ -103,6 +103,7 @@ final class RiskAssessment extends Equatable {
     required this.confidenceLower,
     required this.confidenceUpper,
     required this.usedDegradedInputs,
+    required this.isRainFed,
     this.advisoryTitleKey,
     this.advisoryBodyKey,
     this.voiceBriefingUri,
@@ -140,6 +141,13 @@ final class RiskAssessment extends Equatable {
   /// True when NDVI substituted for SIF, or another fallback was used. Widens
   /// the interval and lowers the reported confidence (FR-INGE-010).
   final bool usedDegradedInputs;
+
+  /// True when the farmer has no irrigation source for this parcel.
+  /// D3 ("what to do") uses this to decide between irrigation advice and
+  /// conservation advice (mulching, weeding) - recommending irrigation to a
+  /// field with no water source is not a hedge, it is advice the farmer
+  /// cannot act on.
+  final bool isRainFed;
 
   final String? advisoryTitleKey;
   final String? advisoryBodyKey;
@@ -182,6 +190,7 @@ final class RiskAssessment extends Equatable {
         confidenceLower,
         confidenceUpper,
         usedDegradedInputs,
+        isRainFed,
         advisoryTitleKey,
         advisoryBodyKey,
         voiceBriefingUri,

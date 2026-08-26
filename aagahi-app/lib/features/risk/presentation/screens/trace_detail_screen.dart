@@ -7,6 +7,7 @@ import '../../../../shared_widgets/glass_card.dart';
 import '../../../../shared_widgets/listen_pill.dart';
 import '../../domain/entities/risk_assessment.dart';
 import '../providers/risk_providers.dart';
+import 'what_to_do_screen.dart';
 
 /// Screen D2 (screens_v2.html flow D) - the 14-day soil-moisture trace,
 /// reached from D1 ([CausalExplanationScreen]) via "View 14-day trend".
@@ -122,6 +123,19 @@ class TraceDetailScreen extends ConsumerWidget {
                     .toggle(assessment),
               ),
             ),
+            if (assessment.advisoryTitleKey != null) ...[
+              const SizedBox(height: AppSpacing.md),
+              Center(
+                child: TextButton(
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => WhatToDoScreen(assessment: assessment),
+                    ),
+                  ),
+                  child: Text(l10n.whatToDo),
+                ),
+              ),
+            ],
           ],
         ),
       ),

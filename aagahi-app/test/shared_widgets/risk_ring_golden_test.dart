@@ -55,6 +55,7 @@ RiskAssessment _scenario() {
     confidenceLower: 0.58,
     confidenceUpper: 0.81,
     usedDegradedInputs: false,
+    isRainFed: false,
   );
 }
 

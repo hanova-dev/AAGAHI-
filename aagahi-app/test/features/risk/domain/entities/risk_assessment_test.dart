@@ -24,6 +24,7 @@ void main() {
         confidenceLower: ciLower,
         confidenceUpper: ciUpper,
         usedDegradedInputs: degraded,
+        isRainFed: false,
       );
 
   group('RiskBand', () {
@@ -109,6 +110,7 @@ void main() {
           confidenceLower: 0.4,
           confidenceUpper: 0.6,
           usedDegradedInputs: false,
+          isRainFed: false,
         ),
         throwsA(isA<AssertionError>()),
       );

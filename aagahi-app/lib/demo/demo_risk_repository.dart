@@ -110,8 +110,11 @@ final class DemoRiskRepository implements RiskRepository {
       // NDVI-degraded mode (config.py's SIF note). The demo should not look
       // more confident than the real pipeline can honestly be.
       usedDegradedInputs: true,
-      advisoryTitleKey: 'advisory.irrigateNow',
-      advisoryBodyKey: 'advisory.irrigateNow.body',
+      // Rain-fed - D3 ("what to do") shows conservation advice, never
+      // irrigation, for exactly this reason (see RiskAssessment.isRainFed).
+      isRainFed: true,
+      advisoryTitleKey: 'advisory.cutWeedsAndMulch',
+      advisoryBodyKey: 'advisory.cutWeedsAndMulch.body',
       voiceBriefingUri: null,
     );
   }
@@ -142,6 +145,7 @@ final class DemoRiskRepository implements RiskRepository {
       confidenceLower: 0.24,
       confidenceUpper: 0.45,
       usedDegradedInputs: true,
+      isRainFed: false,
       advisoryTitleKey: null,
       advisoryBodyKey: null,
       voiceBriefingUri: null,
@@ -165,6 +169,7 @@ final class DemoRiskRepository implements RiskRepository {
       confidenceLower: 0.02,
       confidenceUpper: 0.11,
       usedDegradedInputs: false,
+      isRainFed: false,
       advisoryTitleKey: null,
       advisoryBodyKey: null,
       voiceBriefingUri: null,
@@ -188,6 +193,7 @@ final class DemoRiskRepository implements RiskRepository {
       confidenceLower: 0.01,
       confidenceUpper: 0.08,
       usedDegradedInputs: false,
+      isRainFed: false,
       advisoryTitleKey: null,
       advisoryBodyKey: null,
       voiceBriefingUri: null,

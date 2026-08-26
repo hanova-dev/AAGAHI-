@@ -44,8 +44,9 @@ single most safety-critical UI state. See CLAUDE.md §1.
   "confidenceLower": 0.58,
   "confidenceUpper": 0.81,
   "usedDegradedInputs": false,
-  "advisoryTitleKey": "advisory.irrigateNow",
-  "advisoryBodyKey": "advisory.irrigateNow.body",
+  "isRainFed": true,
+  "advisoryTitleKey": "advisory.cutWeedsAndMulch",
+  "advisoryBodyKey": "advisory.cutWeedsAndMulch.body",
   "voiceBriefingUri": null
 }
 ```

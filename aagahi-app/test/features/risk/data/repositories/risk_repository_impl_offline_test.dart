@@ -67,6 +67,7 @@ void main() {
         confidenceLower: 0.6,
         confidenceUpper: 0.8,
         usedDegradedInputs: false,
+        isRainFed: false,
       );
 
   test(
