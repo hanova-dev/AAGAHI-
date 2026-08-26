@@ -7,6 +7,15 @@ import '../../domain/entities/risk_assessment.dart';
 import '../../domain/repositories/risk_repository.dart';
 import '../../domain/usecases/get_risk_assessment.dart';
 
+/// Which parcel the nav shell's Home tab shows. Changed by
+/// `ParcelSwitcherView` (C2) - a real switch: `RiskDashboardScreen` is keyed
+/// by parcel ID through the existing `riskAssessmentProvider(parcelId)`
+/// family provider, so picking a different field here changes what's shown
+/// with no special-casing anywhere else.
+final currentParcelIdProvider = StateProvider<String>(
+  (ref) => 'demo-parcel-wheat-01',
+);
+
 /// Injected at app start in main.dart via ProviderScope overrides. Left
 /// unimplemented here so the presentation layer never constructs its own
 /// dependencies - that is what keeps widget tests free of real HTTP and a

@@ -66,6 +66,71 @@ final class InMemoryLocalisations implements AppLocalisations {
       en: 'See district warning instead',
       ur: 'اس کے بجائے ضلعی وارننگ دیکھیں',
     ),
+    // District warning (target of C3's button)
+    'district.title': (en: 'District warning', ur: 'ضلعی وارننگ'),
+    'district.explanation': (
+      en: 'This is the general risk for your district, based on nearby '
+          'grid cells. It is not specific to your field.',
+      ur: 'یہ آپ کے ضلعے کا عمومی خطرہ ہے، قریبی علاقوں کی بنیاد پر۔ یہ '
+          'خاص طور پر آپ کے کھیت کے لیے نہیں ہے۔',
+    ),
+    // C2 - parcel switcher
+    'parcels.yourFields': (en: 'Your fields', ur: 'آپ کے کھیت'),
+    'parcels.addAnother': (en: '+ Add another field', ur: '+ ایک اور کھیت شامل کریں'),
+    // Nav shell
+    'nav.home': (en: 'Home', ur: 'گھر'),
+    'nav.warnings': (en: 'Warnings', ur: 'وارننگز'),
+    'nav.report': (en: 'Report', ur: 'رپورٹ'),
+    'nav.settings': (en: 'Settings', ur: 'ترتیبات'),
+    // E1 - alert list
+    'alerts.newSuffix': (en: 'new', ur: 'نئی'),
+    'alerts.monthlySummary': (
+      en: 'You have had {count} warnings this month.',
+      ur: 'اس مہینے آپ کو {count} وارننگز موصول ہوئیں۔',
+    ),
+    'alerts.status.heard': (en: 'heard', ur: 'سنا گیا'),
+    'alerts.status.repliedByYou': (en: 'you replied', ur: 'آپ نے جواب دیا'),
+    'alerts.status.voiceSeconds': (
+      en: '{seconds} sec voice',
+      ur: '{seconds} سیکنڈ کی آواز',
+    ),
+    'alerts.channel.push': (en: 'Push', ur: 'پش'),
+    'alerts.channel.whatsapp': (en: 'WhatsApp', ur: 'واٹس ایپ'),
+    'alerts.channel.sms': (en: 'SMS', ur: 'ایس ایم ایس'),
+    'alerts.headline.rapidDrying': (
+      en: 'Rapid drying expected',
+      ur: 'تیزی سے خشکی متوقع ہے',
+    ),
+    'alerts.headline.watchConditions': (en: 'Watch conditions', ur: 'حالات پر نظر رکھیں'),
+    'alerts.headline.conditionsEased': (en: 'Conditions eased', ur: 'حالات بہتر ہوئے'),
+    'alerts.headline.severeDrying': (en: 'Severe drying', ur: 'شدید خشکی'),
+    // E2 - alert detail
+    'alerts.detail.dangerHeadline': (
+      en: 'The next ten days are dangerous for this field',
+      ur: 'اگلے دس دن اس کھیت کے لیے خطرناک ہیں',
+    ),
+    'alerts.detail.doThisWeek': (en: 'Do this week', ur: 'اس ہفتے یہ کریں'),
+    'alerts.advice.cutWeeds': (
+      en: 'Cut weeds and mulch the rows',
+      ur: 'جڑی بوٹیاں کاٹیں اور قطاروں پر ملچ کریں',
+    ),
+    'alerts.advice.keepMonitoring': (
+      en: 'Keep monitoring soil moisture',
+      ur: 'مٹی کی نمی پر نظر رکھیں',
+    ),
+    'alerts.advice.noActionNeeded': (
+      en: 'No action needed - conditions are fine',
+      ur: 'کوئی کارروائی درکار نہیں - حالات ٹھیک ہیں',
+    ),
+    'audio.urduVoiceMessage': (en: 'Urdu voice message', ur: 'اردو صوتی پیغام'),
+    'audio.savedOnThisPhone': (en: 'saved on this phone', ur: 'اس فون پر محفوظ ہے'),
+    'audio.briefingNotDownloaded': (
+      en: 'Briefing not downloaded',
+      ur: 'بریفنگ ڈاؤن لوڈ نہیں ہوئی',
+    ),
+    'action.iHaveHeardThis': (en: 'I have heard this', ur: 'میں نے یہ سن لیا ہے'),
+    'action.acknowledged': (en: 'Acknowledged', ur: 'تصدیق ہو گئی'),
+    'action.whyIsItDrying': (en: 'Why is it drying?', ur: 'یہ کیوں خشک ہو رہا ہے؟'),
     // C4 - offline / stale (screens_v2.html flow C)
     'offline.noInternetTitle': (en: 'No internet.', ur: 'انٹرنیٹ نہیں ہے۔'),
     'offline.noInternetBody': (
@@ -188,10 +253,34 @@ final class InMemoryLocalisations implements AppLocalisations {
   @override
   String assessedOn(DateTime date) => DateFormat('d MMM').format(date);
 
-  @override
-  String parcelName(String parcelId) => _ur ? 'میرا گندم کا کھیت' : 'My wheat field';
+  // Parcel names are proper nouns (place names, same as "Chak 42/GB"
+  // elsewhere in this app) - not translated between locales. Crop/stage
+  // text does vary by locale. Keyed by the four seeded demo parcel IDs
+  // (see demo/demo_risk_repository.dart's DemoParcelSummary list); an
+  // unrecognised ID falls back to the original single-parcel copy rather
+  // than throwing, consistent with this class never crashing on
+  // unrecognised input.
+  static const _parcelNames = <String, String>{
+    'demo-parcel-wheat-01': 'Chak 42/GB',
+    'demo-parcel-mustard-02': 'Kotli plot',
+    'demo-parcel-maize-03': 'Nehri rakba',
+    'demo-parcel-mango-04': 'Bagh',
+  };
+
+  static const _cropAndStage = <String, ({String en, String ur})>{
+    'demo-parcel-wheat-01': (en: 'Wheat · Grain fill', ur: 'گندم · دانہ بھرنے کا مرحلہ'),
+    'demo-parcel-mustard-02': (en: 'Mustard · day 61', ur: 'سرسوں · دن 61'),
+    'demo-parcel-maize-03': (en: 'Maize · day 12', ur: 'مکئی · دن 12'),
+    'demo-parcel-mango-04': (en: 'Mango orchard', ur: 'آم کا باغ'),
+  };
 
   @override
-  String cropAndStage(String parcelId) =>
-      _ur ? 'گندم · دانہ بھرنے کا مرحلہ' : 'Wheat · Grain fill';
+  String parcelName(String parcelId) => _parcelNames[parcelId] ?? 'Chak 42/GB';
+
+  @override
+  String cropAndStage(String parcelId) {
+    final entry = _cropAndStage[parcelId] ??
+        _cropAndStage['demo-parcel-wheat-01']!;
+    return _ur ? entry.ur : entry.en;
+  }
 }

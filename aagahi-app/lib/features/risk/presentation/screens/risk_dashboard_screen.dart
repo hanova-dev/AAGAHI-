@@ -9,6 +9,7 @@ import '../../../../shared_widgets/risk_ring.dart';
 import '../../domain/entities/risk_assessment.dart';
 import '../providers/risk_providers.dart';
 import 'not_scorable_view.dart';
+import 'parcel_switcher_view.dart';
 import 'stale_assessment_view.dart';
 
 /// Screen C1 - the landing surface and the only screen most farmers will open.
@@ -173,30 +174,45 @@ class _ParcelHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                l10n.parcelName(assessment.parcelId),
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              const SizedBox(height: 2),
-              Text(
-                l10n.cropAndStage(assessment.parcelId),
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ],
+    return InkWell(
+      // Tapping the current field's name is how C2 (the parcel switcher)
+      // is reached - matching the reference, where C2 has no other
+      // entrance point of its own.
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => const ParcelSwitcherView()),
+      ),
+      borderRadius: BorderRadius.circular(AppRadii.sm),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      l10n.parcelName(assessment.parcelId),
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    const SizedBox(width: 4),
+                    const Icon(Icons.unfold_more, size: 14, color: AppColors.ink3),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  l10n.cropAndStage(assessment.parcelId),
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ],
+            ),
           ),
-        ),
-        Text(
-          l10n.assessedOn(assessment.assessedOn),
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-      ],
+          Text(
+            l10n.assessedOn(assessment.assessedOn),
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ],
+      ),
     );
   }
 }

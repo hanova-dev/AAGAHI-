@@ -4,67 +4,73 @@ import '../core/error/failures.dart';
 import '../features/risk/domain/entities/risk_assessment.dart';
 import '../features/risk/domain/repositories/risk_repository.dart';
 
-/// Fixed, hand-authored risk assessment for the demo build
-/// (`--dart-define=DEMO=true`), wired in `main.dart` and never reachable
-/// without that flag.
+/// One seeded field per demo parcel, keyed by parcel ID - so the C2 parcel
+/// switcher (`ParcelSwitcherView`) is a real switch, not a decorative list:
+/// picking a different field changes what `RiskDashboardScreen` shows,
+/// through the same `riskAssessmentProvider(parcelId)` family provider a
+/// real multi-parcel account would use.
 ///
-/// Implements `RiskRepository` directly rather than introducing a separate
-/// "demo mode" branch inside the screen or provider - `RiskDashboardScreen`
-/// and `RiskAssessmentNotifier` run completely unmodified against this, so
-/// what gets demonstrated is the exact code that ships, not a parallel path.
-///
-/// Scenario: a wheat parcel on canal irrigation, fourteen days into a
-/// rate-based drying event that ends in WARNING - the case AAGAHI exists to
-/// catch (see aagahi-signal/README.md's rate-of-decline validation chart).
+/// Metadata (name, crop, day) for each parcel lives alongside this class in
+/// [demoParcelSummaries] rather than inside [RiskAssessment] itself, since
+/// crop/day-of-season is parcel-registration data (Phase elsewhere), not
+/// part of a risk assessment.
 final class DemoRiskRepository implements RiskRepository {
-  DemoRiskRepository() : _assessment = _buildScenario();
+  DemoRiskRepository() : _assessments = _buildScenarios();
 
-  final RiskAssessment _assessment;
+  final Map<String, RiskAssessment> _assessments;
 
   @override
   Future<Either<Failure, RiskAssessment>> getLatestAssessment({
     required String parcelId,
     bool forceRefresh = false,
   }) async {
-    return Right(_assessment);
+    final assessment = _assessments[parcelId];
+    if (assessment == null) {
+      // A parcelId outside the seeded set - honest absence, not a fabricated
+      // reading, same principle as CLAUDE.md S1 applied to demo data.
+      return const Left(NetworkFailure());
+    }
+    return Right(assessment);
   }
 
   @override
   Stream<RiskAssessment> watchAssessment(String parcelId) {
     // No background sync exists yet (Phase 1) and none is being simulated
-    // here - the demo shows one static, already-computed assessment, not a
-    // live-updating one.
+    // here - the demo shows static, already-computed assessments, not
+    // live-updating ones.
     return const Stream.empty();
   }
 
   @override
   Future<Either<Failure, String>> ensureBriefingCached(String assessmentId) async {
     // No audio in this build: there is no server to render a briefing from,
-    // and flutter_tts/just_audio are not wired yet (Phase 4). Tapping
-    // ListenPill will toggle briefly and do nothing audible, which is
-    // honest for what actually exists right now.
+    // and flutter_tts/just_audio playback is not wired yet (Phase 4). See
+    // AlertDetailScreen, which ships its player UI with the file absent on
+    // purpose (agreed 2026-08-26) rather than faking a download.
     return const Left(NetworkFailure());
   }
 
-  static RiskAssessment _buildScenario() {
-    final now = DateTime.now().toUtc();
+  static Map<String, RiskAssessment> _buildScenarios() {
+    final scenarios = [
+      _wheatScenario(),
+      _mustardScenario(),
+      _maizeScenario(),
+      _mangoScenario(),
+    ];
+    return {for (final scenario in scenarios) scenario.parcelId: scenario};
+  }
 
-    // Fourteen days of soil-moisture percentile, drying from a comfortable
-    // 82nd percentile to the 27th - a curved rate-of-decline signature
-    // (slow, then fast, then levelling as it bottoms out), not a straight
-    // line, matching the shape validated in the signal pipeline's chart.
+  /// Fourteen days of soil-moisture percentile, drying from a comfortable
+  /// 82nd percentile to the 27th - a curved rate-of-decline signature
+  /// (slow, then fast, then levelling as it bottoms out), not a straight
+  /// line, matching the shape validated in the signal pipeline's chart.
+  /// Chak 42/GB, wheat day 24 - the case AAGAHI exists to catch.
+  static RiskAssessment _wheatScenario() {
+    final now = DateTime.now().toUtc();
     const percentiles = [
       82.0, 80.0, 77.0, 74.0, 69.0, 61.0, 53.0,
       45.0, 39.0, 34.0, 31.0, 29.0, 28.0, 27.0,
     ];
-    final trace = [
-      for (var i = 0; i < percentiles.length; i++)
-        TracePoint(
-          date: now.subtract(Duration(days: percentiles.length - 1 - i)),
-          percentile: percentiles[i],
-        ),
-    ];
-
     return RiskAssessment(
       parcelId: 'demo-parcel-wheat-01',
       assessedOn: now,
@@ -94,7 +100,7 @@ final class DemoRiskRepository implements RiskRepository {
           relativeWeight: 0.32,
         ),
       ],
-      trace: trace,
+      trace: _trace(now, percentiles),
       modelVersion: 'demo-v0',
       completenessRatio: 1.0,
       confidenceLower: 0.58,
@@ -109,4 +115,129 @@ final class DemoRiskRepository implements RiskRepository {
       voiceBriefingUri: null,
     );
   }
+
+  /// Kotli plot, mustard day 61 - early intensification signal, worth
+  /// watching but not yet alert-worthy.
+  static RiskAssessment _mustardScenario() {
+    final now = DateTime.now().toUtc();
+    const percentiles = [58.0, 57.0, 55.0, 54.0, 51.0, 49.0, 47.0];
+    return RiskAssessment(
+      parcelId: 'demo-parcel-mustard-02',
+      assessedOn: now,
+      probability: 0.34,
+      band: RiskBand.watch,
+      horizonDays: 14,
+      drivers: const [
+        RiskDriver(
+          featureName: 'sm_5day_delta',
+          contribution: 0.08,
+          direction: DriverDirection.increasesRisk,
+          narrativeKey: 'driver.rootZoneDrying',
+          relativeWeight: 1.0,
+        ),
+      ],
+      trace: _trace(now, percentiles),
+      modelVersion: 'demo-v0',
+      completenessRatio: 1.0,
+      confidenceLower: 0.24,
+      confidenceUpper: 0.45,
+      usedDegradedInputs: true,
+      advisoryTitleKey: null,
+      advisoryBodyKey: null,
+      voiceBriefingUri: null,
+    );
+  }
+
+  /// Nehri rakba, maize day 12 - canal-irrigated, comfortably wet.
+  static RiskAssessment _maizeScenario() {
+    final now = DateTime.now().toUtc();
+    const percentiles = [71.0, 72.0, 70.0, 73.0, 74.0, 72.0, 73.0];
+    return RiskAssessment(
+      parcelId: 'demo-parcel-maize-03',
+      assessedOn: now,
+      probability: 0.06,
+      band: RiskBand.low,
+      horizonDays: 14,
+      drivers: const [],
+      trace: _trace(now, percentiles),
+      modelVersion: 'demo-v0',
+      completenessRatio: 1.0,
+      confidenceLower: 0.02,
+      confidenceUpper: 0.11,
+      usedDegradedInputs: false,
+      advisoryTitleKey: null,
+      advisoryBodyKey: null,
+      voiceBriefingUri: null,
+    );
+  }
+
+  /// Bagh, mango orchard - perennial tree crop, stable.
+  static RiskAssessment _mangoScenario() {
+    final now = DateTime.now().toUtc();
+    const percentiles = [66.0, 65.0, 67.0, 66.0, 68.0, 67.0, 66.0];
+    return RiskAssessment(
+      parcelId: 'demo-parcel-mango-04',
+      assessedOn: now,
+      probability: 0.04,
+      band: RiskBand.low,
+      horizonDays: 14,
+      drivers: const [],
+      trace: _trace(now, percentiles),
+      modelVersion: 'demo-v0',
+      completenessRatio: 1.0,
+      confidenceLower: 0.01,
+      confidenceUpper: 0.08,
+      usedDegradedInputs: false,
+      advisoryTitleKey: null,
+      advisoryBodyKey: null,
+      voiceBriefingUri: null,
+    );
+  }
+
+  static List<TracePoint> _trace(DateTime now, List<double> percentiles) => [
+        for (var i = 0; i < percentiles.length; i++)
+          TracePoint(
+            date: now.subtract(Duration(days: percentiles.length - 1 - i)),
+            percentile: percentiles[i],
+          ),
+      ];
 }
+
+/// Registration-side metadata for each seeded demo parcel (name, crop,
+/// day-of-season) - display-only data for C2's parcel switcher, kept
+/// separate from [RiskAssessment] since a real app would source this from
+/// parcel registration (Phase elsewhere), not from a risk assessment.
+final class DemoParcelSummary {
+  const DemoParcelSummary({
+    required this.parcelId,
+    required this.name,
+    required this.cropAndStage,
+  });
+
+  final String parcelId;
+  final String name;
+  final String cropAndStage;
+}
+
+const demoParcelSummaries = [
+  DemoParcelSummary(
+    parcelId: 'demo-parcel-wheat-01',
+    name: 'Chak 42/GB',
+    cropAndStage: '🌾 Wheat · day 24',
+  ),
+  DemoParcelSummary(
+    parcelId: 'demo-parcel-mustard-02',
+    name: 'Kotli plot',
+    cropAndStage: '🌻 Mustard · day 61',
+  ),
+  DemoParcelSummary(
+    parcelId: 'demo-parcel-maize-03',
+    name: 'Nehri rakba',
+    cropAndStage: '🌽 Maize · day 12',
+  ),
+  DemoParcelSummary(
+    parcelId: 'demo-parcel-mango-04',
+    name: 'Bagh',
+    cropAndStage: '🥭 Mango orchard',
+  ),
+];

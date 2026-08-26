@@ -2,6 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'app_shell.dart';
 import 'core/database/app_database.dart';
 import 'core/database/database_key.dart';
 import 'core/localization/in_memory_localisations.dart';
@@ -13,7 +14,6 @@ import 'features/risk/data/datasources/risk_local_data_source_impl.dart';
 import 'features/risk/data/datasources/risk_remote_data_source_impl.dart';
 import 'features/risk/data/repositories/risk_repository_impl.dart';
 import 'features/risk/presentation/providers/risk_providers.dart';
-import 'features/risk/presentation/screens/risk_dashboard_screen.dart';
 
 /// Set only via `--dart-define=DEMO=true`, never a default in source - a
 /// demo build must be requested explicitly, not fallen into.
@@ -79,7 +79,7 @@ class AagahiApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.dark(),
       darkTheme: AppTheme.dark(),
-      home: const RiskDashboardScreen(parcelId: 'demo-parcel'),
+      home: const AppShell(),
     );
   }
 }
