@@ -212,6 +212,71 @@ final class InMemoryLocalisations implements AppLocalisations {
       ur: 'کوئی مہنگا فیصلہ کرنے سے پہلے محکمہ زراعت کی ضلعی ایڈوائزری بھی '
           'ضرور دیکھیں۔',
     ),
+    // Flow F - field reporting (screens_v2.html)
+    'action.next': (en: 'Next', ur: 'اگلا'),
+    'reporting.localOnlyBanner': (
+      en: 'This will be saved on your phone. There is no sync yet.',
+      ur: 'یہ آپ کے فون پر محفوظ ہو گا۔ ابھی تک سنک موجود نہیں ہے۔',
+    ),
+    'reporting.whatDidYouSee': (
+      en: 'What did you see in the field?',
+      ur: 'آپ نے کھیت میں کیا دیکھا؟',
+    ),
+    'observation.cropWilting': (en: 'Crop wilting', ur: 'فصل مرجھا رہی ہے'),
+    'observation.soilCracking': (en: 'Soil cracking', ur: 'زمین پھٹ رہی ہے'),
+    'observation.cropLoss': (en: 'Crop loss', ur: 'نقصان ہوا ہے'),
+    'observation.allFine': (en: 'All fine', ur: 'سب ٹھیک ہے'),
+    'observation.irrigated': (en: 'I irrigated', ur: 'میں نے پانی دیا'),
+    'observation.rained': (en: 'It rained', ur: 'بارش ہوئی'),
+    'reporting.howBadIsIt': (en: 'How bad is it?', ur: 'کتنا خراب ہے؟'),
+    'reporting.worstSuffix': (en: 'worst', ur: 'بدترین'),
+    'reporting.sayWhatYouSee': (en: 'Say what you see', ur: 'جو دیکھا وہ بتائیں'),
+    'reporting.holdToTalkInstructions': (
+      en: 'Hold the button. Speak. Let go when you finish.',
+      ur: 'بٹن دبائے رکھیں۔ بولیں۔ ختم ہونے پر چھوڑ دیں۔',
+    ),
+    'voice.notAvailable': (
+      en: 'Voice recording is not available in this build.',
+      ur: 'اس ورژن میں صوتی ریکارڈنگ دستیاب نہیں ہے۔',
+    ),
+    'action.skipVoiceNote': (en: 'Skip the voice note', ur: 'صوتی پیغام چھوڑیں'),
+    'reporting.takePicture': (en: 'Take a picture (optional)', ur: 'تصویر لیں (اختیاری)'),
+    'reporting.photoShrunkNote': (
+      en: 'The picture is shrunk on your phone before it is saved, to save '
+          'your data balance.',
+      ur: 'تصویر محفوظ ہونے سے پہلے آپ کے فون پر چھوٹی کر دی جاتی ہے، تاکہ '
+          'ڈیٹا بچ سکے۔',
+    ),
+    'action.gallery': (en: 'Gallery', ur: 'گیلری'),
+    'action.capture': (en: 'Capture', ur: 'تصویر لیں'),
+    'action.skip': (en: 'Skip', ur: 'چھوڑیں'),
+    'reporting.photoPickFailed': (
+      en: 'Could not open the camera or gallery.',
+      ur: 'کیمرہ یا گیلری نہیں کھل سکی۔',
+    ),
+    'reporting.reviewTitle': (en: 'Save this report?', ur: 'کیا یہ رپورٹ محفوظ کریں؟'),
+    'action.readItBack': (en: 'Read it back', ur: 'واپس پڑھیں'),
+    'reporting.fieldWhat': (en: 'What', ur: 'کیا'),
+    'reporting.fieldHowBad': (en: 'How bad', ur: 'کتنا خراب'),
+    'reporting.fieldPhoto': (en: 'Photo', ur: 'تصویر'),
+    'reporting.onePhoto': (en: '1 image', ur: '1 تصویر'),
+    'reporting.noPhoto': (en: 'No photo', ur: 'کوئی تصویر نہیں'),
+    'action.saveReport': (en: 'Save report', ur: 'رپورٹ محفوظ کریں'),
+    'reporting.saveFailed': (
+      en: 'Could not save this report. Please try again.',
+      ur: 'یہ رپورٹ محفوظ نہیں ہو سکی۔ دوبارہ کوشش کریں۔',
+    ),
+    'reporting.savedOnPhone': (en: 'Saved on your phone', ur: 'آپ کے فون میں محفوظ ہو گیا'),
+    'reporting.savedExplanation': (
+      en: 'This report is saved on your phone. There is no sync in this '
+          'build yet, so it will stay here until that is built.',
+      ur: 'یہ رپورٹ آپ کے فون میں محفوظ ہے۔ اس ورژن میں ابھی سنک موجود نہیں '
+          'ہے، اس لیے یہ یہیں رہے گی۔',
+    ),
+    'reporting.savedCountChip': (
+      en: '{count} saved on this phone',
+      ur: '{count} اس فون میں محفوظ ہیں',
+    ),
     // C4 - offline / stale (screens_v2.html flow C)
     'offline.noInternetTitle': (en: 'No internet.', ur: 'انٹرنیٹ نہیں ہے۔'),
     'offline.noInternetBody': (

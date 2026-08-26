@@ -3,14 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/theme/app_theme.dart';
 import 'features/alerts/presentation/screens/alert_list_screen.dart';
+import 'features/reporting/presentation/screens/observation_type_screen.dart';
 import 'features/risk/presentation/providers/risk_providers.dart';
 import 'features/risk/presentation/screens/risk_dashboard_screen.dart';
 
 /// Bottom-nav shell (screens_v2.html's C1 navbar: Home / Warnings / Report /
-/// Settings). Only Home and Warnings are built this phase - Report (field
-/// observations) and Settings are explicitly out of scope, so their tabs are
-/// rendered dimmed and inert rather than navigating to something that
-/// doesn't exist. That is a visible, honest "not yet" - the same standard
+/// Settings). Home, Warnings, and Report are built; Settings is explicitly
+/// out of scope this phase, so its tab is rendered dimmed and inert rather
+/// than navigating to something that doesn't exist - the same standard
 /// applied to every other not-yet-built affordance in this build (C3's
 /// district button before it was wired, E2's "why is it drying?").
 class AppShell extends ConsumerStatefulWidget {
@@ -23,7 +23,7 @@ class AppShell extends ConsumerStatefulWidget {
 class _AppShellState extends ConsumerState<AppShell> {
   int _index = 0;
 
-  static const _builtTabCount = 2;
+  static const _builtTabCount = 3;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +33,7 @@ class _AppShellState extends ConsumerState<AppShell> {
     final pages = [
       RiskDashboardScreen(parcelId: parcelId),
       const AlertListScreen(),
+      const ObservationTypeScreen(),
     ];
 
     return Scaffold(
@@ -57,7 +58,8 @@ class _AppShellState extends ConsumerState<AppShell> {
             label: l10n.translate('nav.warnings'),
           ),
           NavigationDestination(
-            icon: const Opacity(opacity: 0.35, child: Icon(Icons.mic_none)),
+            icon: const Icon(Icons.mic_none_outlined),
+            selectedIcon: const Icon(Icons.mic, color: AppColors.seed),
             label: l10n.translate('nav.report'),
           ),
           NavigationDestination(

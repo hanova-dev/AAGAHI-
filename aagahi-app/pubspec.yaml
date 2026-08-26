@@ -68,6 +68,16 @@ dependencies:
   # "stop and justify it" case the same rule warns about.
   fl_chart: ^0.69.0
 
+  # Client-generated report IDs (flow F): a field report is created offline
+  # and must be able to name itself before any server has seen it. A
+  # correct v4 UUID (version/variant bits set right) is exactly the kind of
+  # small thing not worth hand-rolling.
+  uuid: ^4.4.0
+
+  # F4's photo picker (gallery + camera). No custom platform channel: this
+  # is the standard, maintained way to reach both sources from Flutter.
+  image_picker: ^1.1.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

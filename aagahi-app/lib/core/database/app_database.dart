@@ -26,7 +26,29 @@ class RiskAssessmentRows extends Table {
   Set<Column> get primaryKey => {parcelId};
 }
 
-@DriftDatabase(tables: [RiskAssessmentRows])
+/// One row per field observation (flow F). [id] is a client-generated UUID,
+/// not autoincrement - reports are created offline, so the client must be
+/// able to name a row before any server has ever seen it.
+///
+/// [syncState] is always `LOCAL_ONLY` in this phase: there is no outbox and
+/// no upload path (that is a later phase's work, not this one's). The
+/// column exists as a string, not a fixed default, because a real sync
+/// state machine will add more values later - it is not speculative, it is
+/// the one value that state machine currently has.
+class FieldReportRows extends Table {
+  TextColumn get id => text()();
+  TextColumn get parcelId => text()();
+  DateTimeColumn get createdAt => dateTime()();
+  TextColumn get observationType => text()();
+  IntColumn get severity => integer()();
+  TextColumn get photoPath => text().nullable()();
+  TextColumn get syncState => text()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+@DriftDatabase(tables: [RiskAssessmentRows, FieldReportRows])
 class AppDatabase extends _$AppDatabase {
   /// [executor] is injected rather than opened internally so tests can point
   /// at a temp file with a fixed key, without going through
@@ -34,7 +56,17 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onCreate: (m) => m.createAll(),
+        onUpgrade: (m, from, to) async {
+          if (from < 2) {
+            await m.createTable(fieldReportRows);
+          }
+        },
+      );
 }
 
 /// Opens (or creates) the encrypted database file at [fileName] under the
