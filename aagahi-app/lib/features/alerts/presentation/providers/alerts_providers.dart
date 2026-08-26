@@ -13,6 +13,7 @@ class AlertsNotifier extends Notifier<List<Alert>> {
   List<Alert> build() => [
         Alert(
           id: 'alert-1',
+          parcelId: 'demo-parcel-wheat-01',
           parcelName: 'Chak 42/GB',
           band: RiskBand.warning,
           issuedAt: DateTime.now().toUtc(),
@@ -24,6 +25,7 @@ class AlertsNotifier extends Notifier<List<Alert>> {
         ),
         Alert(
           id: 'alert-2',
+          parcelId: 'demo-parcel-mustard-02',
           parcelName: 'Kotli plot',
           band: RiskBand.watch,
           issuedAt: DateTime.now().toUtc().subtract(const Duration(days: 7)),
@@ -35,6 +37,7 @@ class AlertsNotifier extends Notifier<List<Alert>> {
         ),
         Alert(
           id: 'alert-3',
+          parcelId: 'demo-parcel-wheat-01',
           parcelName: 'Chak 42/GB',
           band: RiskBand.low,
           issuedAt: DateTime.now().toUtc().subtract(const Duration(days: 15)),
@@ -46,6 +49,7 @@ class AlertsNotifier extends Notifier<List<Alert>> {
         ),
         Alert(
           id: 'alert-4',
+          parcelId: 'demo-parcel-maize-03',
           parcelName: 'Nehri rakba',
           band: RiskBand.severe,
           issuedAt: DateTime.now().toUtc().subtract(const Duration(days: 24)),

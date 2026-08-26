@@ -19,6 +19,7 @@ enum AlertChannel { push, whatsapp, sms }
 final class Alert extends Equatable {
   const Alert({
     required this.id,
+    required this.parcelId,
     required this.parcelName,
     required this.band,
     required this.issuedAt,
@@ -31,6 +32,12 @@ final class Alert extends Equatable {
   });
 
   final String id;
+
+  /// Links back to the parcel's [RiskAssessment] (see
+  /// `RiskAssessmentNotifier`/`riskAssessmentProvider`), so E2 can resolve
+  /// real driver data for its "why is it drying?" button rather than
+  /// carrying a duplicate copy of it.
+  final String parcelId;
   final String parcelName;
   final RiskBand band;
   final DateTime issuedAt;
@@ -53,6 +60,7 @@ final class Alert extends Equatable {
 
   Alert copyWith({bool? acknowledged, String? statusKey}) => Alert(
         id: id,
+        parcelId: parcelId,
         parcelName: parcelName,
         band: band,
         issuedAt: issuedAt,
@@ -67,6 +75,7 @@ final class Alert extends Equatable {
   @override
   List<Object?> get props => [
         id,
+        parcelId,
         parcelName,
         band,
         issuedAt,

@@ -7,6 +7,7 @@ import '../../../../shared_widgets/glass_card.dart';
 import '../../../../shared_widgets/risk_ring.dart';
 import '../../../risk/domain/entities/risk_assessment.dart';
 import '../../../risk/presentation/providers/risk_providers.dart';
+import '../../../risk/presentation/screens/causal_explanation_screen.dart';
 import '../providers/alerts_providers.dart';
 
 /// Screen E2 (screens_v2.html flow E) - alert detail with the audio player.
@@ -31,6 +32,8 @@ class AlertDetailScreen extends ConsumerWidget {
     final l10n = ref.watch(localisationProvider);
     final alerts = ref.watch(alertsProvider);
     final alert = alerts.firstWhere((a) => a.id == alertId);
+    final assessment = ref.watch(riskAssessmentProvider(alert.parcelId)).valueOrNull;
+    final canExplainWhy = assessment != null && assessment.drivers.isNotEmpty;
 
     return Scaffold(
       body: SafeArea(
@@ -100,14 +103,19 @@ class AlertDetailScreen extends ConsumerWidget {
                 child: Text(l10n.translate('action.iHaveHeardThis')),
               ),
             const SizedBox(height: AppSpacing.sm),
-            // Disabled, not wired: D1 ("why is it drying") now exists
-            // (CausalExplanationScreen, reachable from C1's causal panel),
-            // but Alert carries no parcelId/RiskAssessment link to open it
-            // from here - that is an Alert-entity change, out of scope for
-            // this item. Rendered for visual parity with the reference
-            // without pretending it navigates anywhere yet.
+            // Disabled only when the assessment hasn't loaded yet or this
+            // parcel genuinely has no drivers to explain (e.g. the
+            // low-risk maize/mango scenarios) - the same condition
+            // _DriverList uses to hide itself entirely on C1. Never
+            // disabled just because the feature doesn't exist: D1 does.
             OutlinedButton(
-              onPressed: null,
+              onPressed: canExplainWhy
+                  ? () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => CausalExplanationScreen(assessment: assessment),
+                        ),
+                      )
+                  : null,
               child: Text(l10n.translate('action.whyIsItDrying')),
             ),
           ],
