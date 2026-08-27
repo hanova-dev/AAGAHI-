@@ -78,6 +78,11 @@ dependencies:
   # is the standard, maintained way to reach both sources from Flutter.
   image_picker: ^1.1.2
 
+  # B1's real field-location capture. No maps SDK: the map in B1 is
+  # illustrative (same convention as RiskRing's decorative-but-real-data
+  # arc), the coordinate this reads is real.
+  geolocator: ^13.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

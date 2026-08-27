@@ -29,12 +29,14 @@ final class RiskLocalDataSourceImpl implements RiskLocalDataSource {
         jsonDecode(row.payload) as Map<String, dynamic>,
       );
     } catch (error) {
-      throw CacheException('Failed to read cached assessment for $parcelId: $error');
+      throw CacheException(
+          'Failed to read cached assessment for $parcelId: $error');
     }
   }
 
   @override
-  Future<void> writeAssessment(String parcelId, RiskAssessmentModel model) async {
+  Future<void> writeAssessment(
+      String parcelId, RiskAssessmentModel model) async {
     try {
       await _db.into(_db.riskAssessmentRows).insertOnConflictUpdate(
             RiskAssessmentRowsCompanion.insert(
@@ -44,7 +46,8 @@ final class RiskLocalDataSourceImpl implements RiskLocalDataSource {
             ),
           );
     } catch (error) {
-      throw CacheException('Failed to write cached assessment for $parcelId: $error');
+      throw CacheException(
+          'Failed to write cached assessment for $parcelId: $error');
     }
   }
 
@@ -75,7 +78,8 @@ final class RiskLocalDataSourceImpl implements RiskLocalDataSource {
       await file.writeAsBytes(bytes, flush: true);
       return file.path;
     } catch (error) {
-      throw CacheException('Failed to write briefing for $assessmentId: $error');
+      throw CacheException(
+          'Failed to write briefing for $assessmentId: $error');
     }
   }
 

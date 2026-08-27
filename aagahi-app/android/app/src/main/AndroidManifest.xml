@@ -4,6 +4,11 @@
          Gallery stays available either way. -->
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <!-- B1's real GPS fix (geolocator). geolocator_android's own manifest
+         already declares these, but stating them here too costs nothing
+         and removes any doubt about where they come from. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <application
         android:label="aagahi"
         android:name="${applicationName}"

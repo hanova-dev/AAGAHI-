@@ -134,8 +134,10 @@ class RiskRing extends StatelessWidget {
     final captionFitsInsideRing =
         caption == null || domeInteriorHeight >= requiredWithCaption;
 
-    final textBlockHeight = captionFitsInsideRing ? withCaptionHeight : valueHeight;
-    final requiredHeight = _minTraceBandHeight + _minGap + textBlockHeight + _bottomMargin;
+    final textBlockHeight =
+        captionFitsInsideRing ? withCaptionHeight : valueHeight;
+    final requiredHeight =
+        _minTraceBandHeight + _minGap + textBlockHeight + _bottomMargin;
 
     // The dome's own shape never shrinks or grows with text; if the text
     // block needs more room than the dome interior offers even after taking
@@ -146,11 +148,16 @@ class RiskRing extends StatelessWidget {
 
     final traceBandHeight = math.max(
       _minTraceBandHeight,
-      domeInteriorHeight + extraFloorSpace - _minGap - textBlockHeight - _bottomMargin,
+      domeInteriorHeight +
+          extraFloorSpace -
+          _minGap -
+          textBlockHeight -
+          _bottomMargin,
     );
     final traceTop = centreDy - radius + strokeWidth * 1.2;
     final traceBottom = traceTop + traceBandHeight;
-    final textTop = centreDy + extraFloorSpace - _bottomMargin - textBlockHeight;
+    final textTop =
+        centreDy + extraFloorSpace - _bottomMargin - textBlockHeight;
 
     final ring = SizedBox(
       width: size,

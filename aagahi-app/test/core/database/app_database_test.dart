@@ -61,7 +61,8 @@ void main() {
       // UTC/local flag on the round-tripped DateTime isn't guaranteed to
       // match the original - only the instant itself is (verified by
       // running this: `==` failed here on the flag while the moment matched).
-      expect(row.assessedOn.isAtSameMomentAs(DateTime.utc(2026, 8, 23)), isTrue);
+      expect(
+          row.assessedOn.isAtSameMomentAs(DateTime.utc(2026, 8, 23)), isTrue);
     },
   );
 
@@ -101,9 +102,8 @@ void main() {
   const sqliteMagicHeader = 'SQLite format 3\u0000';
 
   Future<String> writeMarkerAndReadRawFile(String? key) async {
-    final db = key == null
-        ? AppDatabase(NativeDatabase(dbFile))
-        : openWithKey(key);
+    final db =
+        key == null ? AppDatabase(NativeDatabase(dbFile)) : openWithKey(key);
     await db.into(db.riskAssessmentRows).insertOnConflictUpdate(
           RiskAssessmentRowsCompanion.insert(
             parcelId: 'p1',
@@ -139,12 +139,14 @@ void main() {
       expect(
         content.contains(marker),
         isFalse,
-        reason: 'the plaintext payload must not appear anywhere in the file bytes',
+        reason:
+            'the plaintext payload must not appear anywhere in the file bytes',
       );
       expect(
         content.contains(sqliteMagicHeader),
         isFalse,
-        reason: 'an encrypted file must not start with the standard SQLite header',
+        reason:
+            'an encrypted file must not start with the standard SQLite header',
       );
     },
   );

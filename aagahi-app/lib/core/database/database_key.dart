@@ -25,7 +25,8 @@ class DatabaseKeyProvider {
 
     final random = Random.secure();
     final bytes = List<int>.generate(32, (_) => random.nextInt(256));
-    final generated = bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+    final generated =
+        bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
 
     await _storage.write(key: _storageKey, value: generated);
     return generated;

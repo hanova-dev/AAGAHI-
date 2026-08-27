@@ -31,7 +31,8 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
     ObservationType.rained: ('🌧️', 'observation.rained'),
   };
 
-  Future<void> _save(String parcelId, ObservationType type, int severity, String? photoPath) async {
+  Future<void> _save(String parcelId, ObservationType type, int severity,
+      String? photoPath) async {
     setState(() {
       _saving = true;
       _failed = false;
@@ -58,7 +59,8 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
       (saved) {
         ref.read(fieldReportDraftProvider.notifier).reset();
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute<void>(builder: (_) => SavedConfirmationScreen(report: saved)),
+          MaterialPageRoute<void>(
+              builder: (_) => SavedConfirmationScreen(report: saved)),
         );
       },
     );
@@ -94,9 +96,10 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
             ListenPill(
               label: l10n.translate('action.readItBack'),
               isPlaying: ref.watch(briefingPlaybackProvider).isPlaying,
-              onPressed: () => ref.read(briefingPlaybackProvider.notifier).speakText(
-                    '${l10n.translate(labelKey)}. $severity/5.',
-                  ),
+              onPressed: () =>
+                  ref.read(briefingPlaybackProvider.notifier).speakText(
+                        '${l10n.translate(labelKey)}. $severity/5.',
+                      ),
             ),
             const SizedBox(height: AppSpacing.md),
             Text(
@@ -119,7 +122,9 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                   _ReviewRow(
                     label: l10n.translate('reporting.fieldPhoto'),
                     value: l10n.translate(
-                      draft.photoPath == null ? 'reporting.noPhoto' : 'reporting.onePhoto',
+                      draft.photoPath == null
+                          ? 'reporting.noPhoto'
+                          : 'reporting.onePhoto',
                     ),
                     showDivider: true,
                   ),
@@ -144,8 +149,10 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
               const SizedBox(height: AppSpacing.sm),
               Text(
                 l10n.translate('reporting.saveFailed'),
-                style:
-                    Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.severe),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: AppColors.severe),
               ),
             ],
             const SizedBox(height: AppSpacing.lg),
@@ -157,7 +164,8 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                   ? const SizedBox(
                       width: 20,
                       height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.onSeed),
+                      child: CircularProgressIndicator(
+                          strokeWidth: 2, color: AppColors.onSeed),
                     )
                   : Text(l10n.translate('action.saveReport')),
             ),
@@ -169,7 +177,8 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
 }
 
 class _ReviewRow extends StatelessWidget {
-  const _ReviewRow({required this.label, required this.value, this.showDivider = false});
+  const _ReviewRow(
+      {required this.label, required this.value, this.showDivider = false});
 
   final String label;
   final String value;
@@ -180,7 +189,8 @@ class _ReviewRow extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
       decoration: showDivider
-          ? const BoxDecoration(border: Border(top: BorderSide(color: AppColors.edge)))
+          ? const BoxDecoration(
+              border: Border(top: BorderSide(color: AppColors.edge)))
           : null,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

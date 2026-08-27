@@ -48,7 +48,8 @@ class ParcelSwitcherView extends ConsumerWidget {
                 selected: summary.parcelId == currentParcelId,
                 l10n: l10n,
                 onTap: () {
-                  ref.read(currentParcelIdProvider.notifier).state = summary.parcelId;
+                  ref.read(currentParcelIdProvider.notifier).state =
+                      summary.parcelId;
                   Navigator.of(context).pop();
                 },
               ),
@@ -81,7 +82,8 @@ class _ParcelTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final assessment = ref.watch(riskAssessmentProvider(summary.parcelId)).valueOrNull;
+    final assessment =
+        ref.watch(riskAssessmentProvider(summary.parcelId)).valueOrNull;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
@@ -91,10 +93,14 @@ class _ParcelTile extends ConsumerWidget {
         child: Container(
           padding: const EdgeInsets.all(AppSpacing.md),
           decoration: BoxDecoration(
-            color: selected ? AppColors.seed.withValues(alpha: 0.17) : AppColors.glass,
+            color: selected
+                ? AppColors.seed.withValues(alpha: 0.17)
+                : AppColors.glass,
             borderRadius: BorderRadius.circular(AppRadii.md),
             border: Border.all(
-              color: selected ? AppColors.seed.withValues(alpha: 0.5) : AppColors.edge,
+              color: selected
+                  ? AppColors.seed.withValues(alpha: 0.5)
+                  : AppColors.edge,
             ),
           ),
           child: Row(
@@ -103,14 +109,18 @@ class _ParcelTile extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(summary.name, style: Theme.of(context).textTheme.titleMedium),
+                    Text(summary.name,
+                        style: Theme.of(context).textTheme.titleMedium),
                     const SizedBox(height: 2),
-                    Text(summary.cropAndStage, style: Theme.of(context).textTheme.bodySmall),
+                    Text(summary.cropAndStage,
+                        style: Theme.of(context).textTheme.bodySmall),
                   ],
                 ),
               ),
               if (assessment != null)
-                BandChip(band: assessment.band, label: l10n.bandLabel(assessment.band)),
+                BandChip(
+                    band: assessment.band,
+                    label: l10n.bandLabel(assessment.band)),
             ],
           ),
         ),

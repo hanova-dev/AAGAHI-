@@ -16,7 +16,8 @@ import 'package:flutter_test/flutter_test.dart';
 /// unusually tall line height (AppTheme.urdu: height 2.05) actually fits -
 /// which is the entire question this test exists to answer.
 Future<void> _loadAppFonts() async {
-  final regular = await rootBundle.load('assets/fonts/NotoNastaliqUrdu-Regular.ttf');
+  final regular =
+      await rootBundle.load('assets/fonts/NotoNastaliqUrdu-Regular.ttf');
   await (FontLoader('NotoNastaliqUrdu')..addFont(Future.value(regular))).load();
 }
 
@@ -33,8 +34,20 @@ void _setReferenceViewport(WidgetTester tester) {
 RiskAssessment _scenario() {
   final now = DateTime.utc(2026, 8, 23);
   const percentiles = [
-    82.0, 80.0, 77.0, 74.0, 69.0, 61.0, 53.0,
-    45.0, 39.0, 34.0, 31.0, 29.0, 28.0, 27.0,
+    82.0,
+    80.0,
+    77.0,
+    74.0,
+    69.0,
+    61.0,
+    53.0,
+    45.0,
+    39.0,
+    34.0,
+    31.0,
+    29.0,
+    28.0,
+    27.0,
   ];
   return RiskAssessment(
     parcelId: 'golden-wheat-01',
@@ -128,7 +141,8 @@ void main() {
       );
     });
 
-    testWidgets('ur caption (real Nastaliq) at ${scale}x does not overlap or clip the trace',
+    testWidgets(
+        'ur caption (real Nastaliq) at ${scale}x does not overlap or clip the trace',
         (tester) async {
       _setReferenceViewport(tester);
       await tester.pumpWidget(

@@ -8,7 +8,8 @@ import '../../domain/repositories/field_report_repository.dart';
 /// field reports have no backend to fake: they are local-only in every
 /// build variant this phase.
 final fieldReportRepositoryProvider = Provider<FieldReportRepository>(
-  (ref) => throw UnimplementedError('Override fieldReportRepositoryProvider at startup'),
+  (ref) => throw UnimplementedError(
+      'Override fieldReportRepositoryProvider at startup'),
 );
 
 final savedReportsCountProvider = StreamProvider.autoDispose<int>(
@@ -25,7 +26,8 @@ final class FieldReportDraft {
   final int? severity;
   final String? photoPath;
 
-  FieldReportDraft copyWith({ObservationType? observationType, int? severity}) =>
+  FieldReportDraft copyWith(
+          {ObservationType? observationType, int? severity}) =>
       FieldReportDraft(
         observationType: observationType ?? this.observationType,
         severity: severity ?? this.severity,

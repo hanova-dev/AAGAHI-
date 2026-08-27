@@ -28,7 +28,11 @@ class CausalExplanationScreen extends ConsumerWidget {
   // Ranked by position, not by risk band - the reference colours the three
   // cards warn/watch/low regardless of the assessment's own band, since
   // these bars compare drivers against each other, not against the ladder.
-  static const _rankColors = [AppColors.warning, AppColors.watch, AppColors.low];
+  static const _rankColors = [
+    AppColors.warning,
+    AppColors.watch,
+    AppColors.low
+  ];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

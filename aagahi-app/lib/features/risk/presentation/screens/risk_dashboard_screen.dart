@@ -6,6 +6,9 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../shared_widgets/glass_card.dart';
 import '../../../../shared_widgets/listen_pill.dart';
 import '../../../../shared_widgets/risk_ring.dart';
+import '../../../parcel_registration/domain/entities/crop_catalog.dart';
+import '../../../parcel_registration/domain/entities/parcel.dart';
+import '../../../parcel_registration/presentation/providers/parcel_registration_providers.dart';
 import '../../domain/entities/risk_assessment.dart';
 import '../providers/risk_providers.dart';
 import 'causal_explanation_screen.dart';
@@ -128,9 +131,8 @@ class _ScoredView extends ConsumerWidget {
             label: l10n.listen,
             isPlaying: ref.watch(briefingPlaybackProvider).isPlaying,
             duration: ref.watch(briefingPlaybackProvider).duration,
-            onPressed: () => ref
-                .read(briefingPlaybackProvider.notifier)
-                .toggle(assessment),
+            onPressed: () =>
+                ref.read(briefingPlaybackProvider.notifier).toggle(assessment),
           ),
         ),
 
@@ -167,14 +169,34 @@ class _ScoredView extends ConsumerWidget {
   }
 }
 
-class _ParcelHeader extends StatelessWidget {
+/// A [ConsumerWidget], not [StatelessWidget]: for a real registered parcel
+/// (flow B), the name/crop/stage shown here come from the saved [Parcel]
+/// row, not from [AppLocalisations.parcelName]/`.cropAndStage`, whose
+/// hardcoded lookup only ever covered the four seeded demo parcels and
+/// would otherwise silently mislabel a farmer's own field as "Chak 42/GB"
+/// (CLAUDE.md S1 - a wrong label is a smaller lie than a wrong risk score,
+/// but it is the same kind of lie).
+class _ParcelHeader extends ConsumerWidget {
   const _ParcelHeader({required this.assessment, required this.l10n});
 
   final RiskAssessment assessment;
   final AppLocalisations l10n;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final registered = ref.watch(registeredParcelProvider).valueOrNull;
+    final isRegistered =
+        registered != null && registered.id == assessment.parcelId;
+
+    final nameText = isRegistered
+        ? l10n.translate('parcels.myField')
+        : l10n.parcelName(
+            assessment.parcelId,
+          );
+    final cropAndStageText = isRegistered
+        ? _realCropAndStage(registered, l10n)
+        : l10n.cropAndStage(assessment.parcelId);
+
     return InkWell(
       // Tapping the current field's name is how C2 (the parcel switcher)
       // is reached - matching the reference, where C2 has no other
@@ -192,19 +214,16 @@ class _ParcelHeader extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(
-                      l10n.parcelName(assessment.parcelId),
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
+                    Text(nameText,
+                        style: Theme.of(context).textTheme.bodySmall),
                     const SizedBox(width: 4),
-                    const Icon(Icons.unfold_more, size: 14, color: AppColors.ink3),
+                    const Icon(Icons.unfold_more,
+                        size: 14, color: AppColors.ink3),
                   ],
                 ),
                 const SizedBox(height: 2),
-                Text(
-                  l10n.cropAndStage(assessment.parcelId),
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                Text(cropAndStageText,
+                    style: Theme.of(context).textTheme.titleMedium),
               ],
             ),
           ),
@@ -216,6 +235,12 @@ class _ParcelHeader extends StatelessWidget {
       ),
     );
   }
+}
+
+String _realCropAndStage(Parcel parcel, AppLocalisations l10n) {
+  final crop = cropById(parcel.cropId);
+  final stage = l10n.translate(parcel.stageKey(DateTime.now().toUtc()));
+  return '${crop.icon} ${l10n.translate(crop.nameKey)} · $stage';
 }
 
 class _DriverList extends StatelessWidget {
@@ -244,8 +269,10 @@ class _DriverList extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(l10n.whyIsItDrying, style: Theme.of(context).textTheme.bodySmall),
-                const Icon(Icons.chevron_right, size: 16, color: AppColors.ink3),
+                Text(l10n.whyIsItDrying,
+                    style: Theme.of(context).textTheme.bodySmall),
+                const Icon(Icons.chevron_right,
+                    size: 16, color: AppColors.ink3),
               ],
             ),
             const SizedBox(height: AppSpacing.sm),

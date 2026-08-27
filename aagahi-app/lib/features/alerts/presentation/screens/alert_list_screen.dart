@@ -32,14 +32,17 @@ class AlertListScreen extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(l10n.translate('nav.warnings'), style: Theme.of(context).textTheme.displaySmall),
+              Text(l10n.translate('nav.warnings'),
+                  style: Theme.of(context).textTheme.displaySmall),
               if (newCount > 0)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
                     color: AppColors.seed.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(999),
-                    border: Border.all(color: AppColors.seed.withValues(alpha: 0.45)),
+                    border: Border.all(
+                        color: AppColors.seed.withValues(alpha: 0.45)),
                   ),
                   child: Text(
                     '$newCount ${l10n.translate('alerts.newSuffix')}',
@@ -58,7 +61,8 @@ class AlertListScreen extends ConsumerWidget {
               alert: alert,
               l10n: l10n,
               onTap: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(builder: (_) => AlertDetailScreen(alertId: alert.id)),
+                MaterialPageRoute<void>(
+                    builder: (_) => AlertDetailScreen(alertId: alert.id)),
               ),
             ),
           const SizedBox(height: AppSpacing.md),
@@ -76,7 +80,8 @@ class AlertListScreen extends ConsumerWidget {
 }
 
 class _AlertRow extends StatelessWidget {
-  const _AlertRow({required this.alert, required this.l10n, required this.onTap});
+  const _AlertRow(
+      {required this.alert, required this.l10n, required this.onTap});
 
   final Alert alert;
   final AppLocalisations l10n;
@@ -84,7 +89,8 @@ class _AlertRow extends StatelessWidget {
 
   String _statusLine() {
     final now = DateTime.now().toUtc();
-    final sameDay = now.difference(alert.issuedAt).inHours < 24 && now.day == alert.issuedAt.day;
+    final sameDay = now.difference(alert.issuedAt).inHours < 24 &&
+        now.day == alert.issuedAt.day;
     final when = sameDay
         ? 'Today ${DateFormat('HH:mm').format(alert.issuedAt)}'
         : DateFormat('d MMM').format(alert.issuedAt);
@@ -130,7 +136,8 @@ class _AlertRow extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 4),
-                  Text(_statusLine(), style: Theme.of(context).textTheme.bodySmall),
+                  Text(_statusLine(),
+                      style: Theme.of(context).textTheme.bodySmall),
                 ],
               ),
             ),

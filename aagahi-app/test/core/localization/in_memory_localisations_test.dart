@@ -28,7 +28,9 @@ void main() {
       );
     });
 
-    test('returns the English translation for a known key in the English locale', () {
+    test(
+        'returns the English translation for a known key in the English locale',
+        () {
       const l10n = InMemoryLocalisations(BuiltinLocale.en);
       expect(l10n.translate('advisory.irrigateNow'), 'Irrigate now if you can');
     });

@@ -27,7 +27,8 @@ class TraceDetailScreen extends ConsumerWidget {
   /// indexing out of range - the resulting fall is honestly "as much history
   /// as we have," not a fabricated 14-day figure.
   static double _fallOverDays(List<TracePoint> trace, int daysBack) {
-    final referenceIndex = (trace.length - 1 - daysBack).clamp(0, trace.length - 1);
+    final referenceIndex =
+        (trace.length - 1 - daysBack).clamp(0, trace.length - 1);
     return trace[referenceIndex].percentile - trace.last.percentile;
   }
 
@@ -70,7 +71,8 @@ class TraceDetailScreen extends ConsumerWidget {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const SizedBox(height: AppSpacing.sm),
-                  SizedBox(height: 140, child: _TraceChart(assessment: assessment)),
+                  SizedBox(
+                      height: 140, child: _TraceChart(assessment: assessment)),
                   const SizedBox(height: 4),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -210,7 +212,8 @@ class _FallTile extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             '$sign${fall.abs().round()} pts',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: color),
+            style:
+                Theme.of(context).textTheme.titleMedium?.copyWith(color: color),
           ),
         ],
       ),

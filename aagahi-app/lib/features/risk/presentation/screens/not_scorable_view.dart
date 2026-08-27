@@ -16,7 +16,8 @@ import '../providers/risk_providers.dart';
 /// no risk percentage or [BandChip] anywhere in this widget - see
 /// CLAUDE.md S1 and the widget test guarding exactly that invariant.
 class NotScorableView extends ConsumerWidget {
-  const NotScorableView({required this.parcelId, required this.failure, super.key});
+  const NotScorableView(
+      {required this.parcelId, required this.failure, super.key});
 
   final String parcelId;
   final NotScorableFailure failure;
@@ -34,7 +35,8 @@ class NotScorableView extends ConsumerWidget {
         AppSpacing.xl,
       ),
       children: [
-        Text(l10n.parcelName(parcelId), style: Theme.of(context).textTheme.bodySmall),
+        Text(l10n.parcelName(parcelId),
+            style: Theme.of(context).textTheme.bodySmall),
         const SizedBox(height: AppSpacing.md),
         GlassCard(
           padding: const EdgeInsets.all(AppSpacing.lg),

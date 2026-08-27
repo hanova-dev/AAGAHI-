@@ -10,6 +10,10 @@ import 'core/network/dio_client.dart';
 import 'core/network/network_info_impl.dart';
 import 'core/theme/app_theme.dart';
 import 'demo/demo_risk_repository.dart';
+import 'features/onboarding/presentation/screens/splash_screen.dart';
+import 'features/parcel_registration/data/datasources/parcel_local_data_source_impl.dart';
+import 'features/parcel_registration/data/repositories/parcel_repository_impl.dart';
+import 'features/parcel_registration/presentation/providers/parcel_registration_providers.dart';
 import 'features/reporting/data/datasources/field_report_local_data_source_impl.dart';
 import 'features/reporting/data/repositories/field_report_repository_impl.dart';
 import 'features/reporting/presentation/providers/reporting_providers.dart';
@@ -36,30 +40,46 @@ const _isDemo = bool.fromEnvironment('DEMO');
 /// `DEMO=true` is the opt-in exception for *risk* data only: it skips the
 /// remote data source and overrides `riskRepositoryProvider` with the
 /// seeded fake, since no backend is deployed yet. Field reports (flow F)
-/// are local-only in every build variant - there is no backend to fake for
-/// them either way - so the encrypted database is opened unconditionally
-/// and `fieldReportRepositoryProvider` is always the real, Drift-backed
-/// implementation. `localisationProvider` is likewise wired identically in
+/// and registered parcels (flow B) are local-only in every build variant -
+/// there is no backend to fake for either way - so the encrypted database
+/// is opened unconditionally and `fieldReportRepositoryProvider`/
+/// `parcelRepositoryProvider` are always the real, Drift-backed
+/// implementations. `localisationProvider` is likewise wired identically in
 /// both branches with [InMemoryLocalisations] - an unwired localisation
 /// provider previously meant that launching the real build variant (the
 /// mistake a reviewer running the wrong build is one `flutter run` away
 /// from making) crashed on `UnimplementedError` instead of rendering a
 /// screen with a few untranslated keys visible. A missing label is a bug
 /// you can see; a crash on startup is not a product to evaluate at all.
+///
+/// Flow A/B onboarding only gates the *non-demo* build: `--dart-define=DEMO=true`
+/// always has its four seeded parcels (in-memory, not in Drift) and must
+/// keep landing straight on the dashboard, exactly as every other item this
+/// session has verified it does - a demo build that suddenly opened on a
+/// blank onboarding flow because no real `Parcel` row exists would be a
+/// regression, not this feature working correctly.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final key = await const DatabaseKeyProvider().getOrCreateKey();
   final database = AppDatabase(openEncryptedExecutor(encryptionKey: key));
+  final parcelRepository = ParcelRepositoryImpl(
+    local: ParcelLocalDataSourceImpl(database),
+  );
 
   final overrides = <Override>[
-    localisationProvider.overrideWithValue(const InMemoryLocalisations()),
+    localisationProvider.overrideWith((ref) => const InMemoryLocalisations()),
     fieldReportRepositoryProvider.overrideWithValue(
-      FieldReportRepositoryImpl(local: FieldReportLocalDataSourceImpl(database)),
+      FieldReportRepositoryImpl(
+          local: FieldReportLocalDataSourceImpl(database)),
     ),
+    parcelRepositoryProvider.overrideWithValue(parcelRepository),
   ];
+
+  var needsOnboarding = false;
   if (_isDemo) {
-    overrides.add(riskRepositoryProvider.overrideWithValue(DemoRiskRepository()));
+    overrides
+        .add(riskRepositoryProvider.overrideWithValue(DemoRiskRepository()));
   } else {
     final localDataSource = RiskLocalDataSourceImpl(database);
     final networkInfo = NetworkInfoImpl(Connectivity());
@@ -74,13 +94,33 @@ Future<void> main() async {
         ),
       ),
     ]);
+
+    final registered = await parcelRepository.getFirstParcel();
+    registered.fold(
+      (_) => needsOnboarding = true,
+      (parcel) {
+        if (parcel == null) {
+          needsOnboarding = true;
+        } else {
+          overrides
+              .add(currentParcelIdProvider.overrideWith((ref) => parcel.id));
+        }
+      },
+    );
   }
 
-  runApp(ProviderScope(overrides: overrides, child: const AagahiApp()));
+  runApp(
+    ProviderScope(
+      overrides: overrides,
+      child: AagahiApp(showOnboarding: needsOnboarding),
+    ),
+  );
 }
 
 class AagahiApp extends StatelessWidget {
-  const AagahiApp({super.key});
+  const AagahiApp({required this.showOnboarding, super.key});
+
+  final bool showOnboarding;
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +129,7 @@ class AagahiApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.dark(),
       darkTheme: AppTheme.dark(),
-      home: const AppShell(),
+      home: showOnboarding ? const SplashScreen() : const AppShell(),
     );
   }
 }

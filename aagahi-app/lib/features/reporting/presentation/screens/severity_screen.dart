@@ -64,8 +64,9 @@ class SeverityScreen extends ConsumerWidget {
                         ? '5 · ${l10n.translate('reporting.worstSuffix')}'
                         : '$level',
                     selected: selected == level,
-                    onTap: () =>
-                        ref.read(fieldReportDraftProvider.notifier).setSeverity(level),
+                    onTap: () => ref
+                        .read(fieldReportDraftProvider.notifier)
+                        .setSeverity(level),
                   ),
               ],
             ),
@@ -74,7 +75,8 @@ class SeverityScreen extends ConsumerWidget {
               onPressed: selected == null
                   ? null
                   : () => Navigator.of(context).push(
-                        MaterialPageRoute<void>(builder: (_) => const VoiceNoteScreen()),
+                        MaterialPageRoute<void>(
+                            builder: (_) => const VoiceNoteScreen()),
                       ),
               child: Text(l10n.translate('action.next')),
             ),
@@ -105,7 +107,9 @@ class _SeverityTile extends StatelessWidget {
       borderRadius: BorderRadius.circular(AppRadii.md),
       child: Container(
         decoration: BoxDecoration(
-          color: selected ? AppColors.seed.withValues(alpha: 0.15) : AppColors.glass,
+          color: selected
+              ? AppColors.seed.withValues(alpha: 0.15)
+              : AppColors.glass,
           borderRadius: BorderRadius.circular(AppRadii.md),
           border: Border.all(
             color: selected ? AppColors.seed : AppColors.edge,

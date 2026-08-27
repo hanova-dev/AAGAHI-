@@ -5,7 +5,8 @@ import '../../../../core/error/exceptions.dart';
 import '../../domain/entities/field_report.dart';
 import 'field_report_local_data_source.dart';
 
-final class FieldReportLocalDataSourceImpl implements FieldReportLocalDataSource {
+final class FieldReportLocalDataSourceImpl
+    implements FieldReportLocalDataSource {
   FieldReportLocalDataSourceImpl(this._db);
 
   final AppDatabase _db;

@@ -27,10 +27,12 @@ class _NotScorableRepository implements RiskRepository {
   }
 
   @override
-  Stream<RiskAssessment> watchAssessment(String parcelId) => const Stream.empty();
+  Stream<RiskAssessment> watchAssessment(String parcelId) =>
+      const Stream.empty();
 
   @override
-  Future<Either<Failure, String>> ensureBriefingCached(String assessmentId) async {
+  Future<Either<Failure, String>> ensureBriefingCached(
+      String assessmentId) async {
     return const Left(NetworkFailure());
   }
 }
@@ -43,9 +45,10 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            riskRepositoryProvider.overrideWithValue(const _NotScorableRepository()),
-            localisationProvider.overrideWithValue(
-              const InMemoryLocalisations(BuiltinLocale.en),
+            riskRepositoryProvider
+                .overrideWithValue(const _NotScorableRepository()),
+            localisationProvider.overrideWith(
+              (ref) => const InMemoryLocalisations(BuiltinLocale.en),
             ),
           ],
           child: const MaterialApp(

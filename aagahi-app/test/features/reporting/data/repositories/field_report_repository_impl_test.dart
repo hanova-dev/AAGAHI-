@@ -47,7 +47,8 @@ void main() {
     expect(local.inserted, [report]);
   });
 
-  test('a local write failure surfaces as CacheFailure, never a silent drop', () async {
+  test('a local write failure surfaces as CacheFailure, never a silent drop',
+      () async {
     local.shouldThrow = true;
 
     final result = await repository.save(buildReport());
@@ -56,7 +57,8 @@ void main() {
     expect(local.inserted, isEmpty);
   });
 
-  test('watchSavedCount reflects real inserts, not a fabricated number', () async {
+  test('watchSavedCount reflects real inserts, not a fabricated number',
+      () async {
     await repository.save(buildReport());
 
     expect(await repository.watchSavedCount().first, 1);

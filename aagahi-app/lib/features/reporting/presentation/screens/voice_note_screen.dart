@@ -68,7 +68,8 @@ class _VoiceNoteScreenState extends State<VoiceNoteScreen> {
                       decoration: BoxDecoration(
                         color: AppColors.seed.withValues(alpha: 0.15),
                         shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.seed.withValues(alpha: 0.4)),
+                        border: Border.all(
+                            color: AppColors.seed.withValues(alpha: 0.4)),
                       ),
                       alignment: Alignment.center,
                       child: const Text('🎙️', style: TextStyle(fontSize: 38)),
@@ -87,7 +88,8 @@ class _VoiceNoteScreenState extends State<VoiceNoteScreen> {
                 const SizedBox(height: AppSpacing.lg),
                 OutlinedButton(
                   onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute<void>(builder: (_) => const PhotoScreen()),
+                    MaterialPageRoute<void>(
+                        builder: (_) => const PhotoScreen()),
                   ),
                   child: Text(l10n.translate('action.skipVoiceNote')),
                 ),

@@ -42,7 +42,8 @@ final class DemoRiskRepository implements RiskRepository {
   }
 
   @override
-  Future<Either<Failure, String>> ensureBriefingCached(String assessmentId) async {
+  Future<Either<Failure, String>> ensureBriefingCached(
+      String assessmentId) async {
     // No audio in this build: there is no server to render a briefing from,
     // and flutter_tts/just_audio playback is not wired yet (Phase 4). See
     // AlertDetailScreen, which ships its player UI with the file absent on
@@ -68,8 +69,20 @@ final class DemoRiskRepository implements RiskRepository {
   static RiskAssessment _wheatScenario() {
     final now = DateTime.now().toUtc();
     const percentiles = [
-      82.0, 80.0, 77.0, 74.0, 69.0, 61.0, 53.0,
-      45.0, 39.0, 34.0, 31.0, 29.0, 28.0, 27.0,
+      82.0,
+      80.0,
+      77.0,
+      74.0,
+      69.0,
+      61.0,
+      53.0,
+      45.0,
+      39.0,
+      34.0,
+      31.0,
+      29.0,
+      28.0,
+      27.0,
     ];
     return RiskAssessment(
       parcelId: 'demo-parcel-wheat-01',

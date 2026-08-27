@@ -6,7 +6,8 @@ import '../../domain/entities/alert.dart';
 /// Seeded alert history matching screens_v2.html flow E's E1 mockup
 /// exactly (parcel names, bands, dates, channels, statuses) - not
 /// arbitrary placeholder content.
-final alertsProvider = NotifierProvider<AlertsNotifier, List<Alert>>(AlertsNotifier.new);
+final alertsProvider =
+    NotifierProvider<AlertsNotifier, List<Alert>>(AlertsNotifier.new);
 
 class AlertsNotifier extends Notifier<List<Alert>> {
   @override

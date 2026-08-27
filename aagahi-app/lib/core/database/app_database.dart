@@ -48,7 +48,26 @@ class FieldReportRows extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-@DriftDatabase(tables: [RiskAssessmentRows, FieldReportRows])
+/// One row per registered field (flow B). At most one is required to exist
+/// for the app's first-launch onboarding gate (`main.dart`) to consider the
+/// farmer registered; a real multi-parcel switcher is out of scope this
+/// item (see `Parcel`'s doc comment on why there is no `name` column).
+class ParcelRows extends Table {
+  TextColumn get id => text()();
+  RealColumn get areaAcres => real()();
+  TextColumn get cropId => text()();
+  DateTimeColumn get sowingDate => dateTime()();
+  TextColumn get waterSource => text()();
+  TextColumn get soilType => text()();
+  DateTimeColumn get createdAt => dateTime()();
+  RealColumn get latitude => real().nullable()();
+  RealColumn get longitude => real().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+@DriftDatabase(tables: [RiskAssessmentRows, FieldReportRows, ParcelRows])
 class AppDatabase extends _$AppDatabase {
   /// [executor] is injected rather than opened internally so tests can point
   /// at a temp file with a fixed key, without going through
@@ -56,7 +75,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -64,6 +83,9 @@ class AppDatabase extends _$AppDatabase {
         onUpgrade: (m, from, to) async {
           if (from < 2) {
             await m.createTable(fieldReportRows);
+          }
+          if (from < 3) {
+            await m.createTable(parcelRows);
           }
         },
       );

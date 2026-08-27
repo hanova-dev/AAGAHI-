@@ -28,7 +28,8 @@ final currentParcelIdProvider = StateProvider<String>(
 /// not an oversight - see [riskLocalDataSourceProvider] and
 /// [networkInfoProvider].
 final riskRepositoryProvider = Provider<RiskRepository>(
-  (ref) => throw UnimplementedError('Override riskRepositoryProvider at startup'),
+  (ref) =>
+      throw UnimplementedError('Override riskRepositoryProvider at startup'),
 );
 
 /// Real outside demo mode as of Phase 1 (Drift + SQLCipher, see
@@ -38,7 +39,8 @@ final riskRepositoryProvider = Provider<RiskRepository>(
 /// offline-first stack is buildable and testable now; the remote half is
 /// not.
 final riskLocalDataSourceProvider = Provider<RiskLocalDataSource>(
-  (ref) => throw UnimplementedError('Override riskLocalDataSourceProvider at startup'),
+  (ref) => throw UnimplementedError(
+      'Override riskLocalDataSourceProvider at startup'),
 );
 
 /// Real outside demo mode as of Phase 1 (connectivity_plus, see
@@ -198,6 +200,11 @@ abstract interface class AppLocalisations {
   String cropAndStage(String parcelId);
 }
 
-final localisationProvider = Provider<AppLocalisations>(
+/// A `StateProvider`, not a plain `Provider`: A2 (screens_v2.html flow A,
+/// language choice) needs to actually switch the active locale for the
+/// rest of the app, not just read it once at startup. Every existing
+/// `ref.watch(localisationProvider)` call site is unaffected - `watch`
+/// works the same way on both provider kinds.
+final localisationProvider = StateProvider<AppLocalisations>(
   (ref) => throw UnimplementedError('Override localisationProvider at startup'),
 );

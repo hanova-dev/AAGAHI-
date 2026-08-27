@@ -32,7 +32,8 @@ class AlertDetailScreen extends ConsumerWidget {
     final l10n = ref.watch(localisationProvider);
     final alerts = ref.watch(alertsProvider);
     final alert = alerts.firstWhere((a) => a.id == alertId);
-    final assessment = ref.watch(riskAssessmentProvider(alert.parcelId)).valueOrNull;
+    final assessment =
+        ref.watch(riskAssessmentProvider(alert.parcelId)).valueOrNull;
     final canExplainWhy = assessment != null && assessment.drivers.isNotEmpty;
 
     return Scaffold(
@@ -72,7 +73,8 @@ class AlertDetailScreen extends ConsumerWidget {
             ),
             const SizedBox(height: AppSpacing.md),
             if (alert.briefingDurationSeconds != null) ...[
-              _AudioPlayerCard(l10n: l10n, durationSeconds: alert.briefingDurationSeconds!),
+              _AudioPlayerCard(
+                  l10n: l10n, durationSeconds: alert.briefingDurationSeconds!),
               const SizedBox(height: AppSpacing.sm),
             ],
             GlassCard(
@@ -99,7 +101,8 @@ class AlertDetailScreen extends ConsumerWidget {
               )
             else
               FilledButton(
-                onPressed: () => ref.read(alertsProvider.notifier).acknowledge(alert.id),
+                onPressed: () =>
+                    ref.read(alertsProvider.notifier).acknowledge(alert.id),
                 child: Text(l10n.translate('action.iHaveHeardThis')),
               ),
             const SizedBox(height: AppSpacing.sm),
@@ -112,7 +115,8 @@ class AlertDetailScreen extends ConsumerWidget {
               onPressed: canExplainWhy
                   ? () => Navigator.of(context).push(
                         MaterialPageRoute<void>(
-                          builder: (_) => CausalExplanationScreen(assessment: assessment),
+                          builder: (_) =>
+                              CausalExplanationScreen(assessment: assessment),
                         ),
                       )
                   : null,
@@ -153,7 +157,8 @@ class _AudioPlayerCardState extends State<_AudioPlayerCard> {
             child: Container(
               width: AppSpacing.minTouchTarget,
               height: AppSpacing.minTouchTarget,
-              decoration: const BoxDecoration(color: AppColors.seed, shape: BoxShape.circle),
+              decoration: const BoxDecoration(
+                  color: AppColors.seed, shape: BoxShape.circle),
               child: const Icon(Icons.play_arrow, color: AppColors.onSeed),
             ),
           ),

@@ -70,8 +70,9 @@ class ObservationTypeScreen extends ConsumerWidget {
                   icon: icon,
                   label: l10n.translate(labelKey),
                   selected: selected == type,
-                  onTap: () =>
-                      ref.read(fieldReportDraftProvider.notifier).setObservationType(type),
+                  onTap: () => ref
+                      .read(fieldReportDraftProvider.notifier)
+                      .setObservationType(type),
                 ),
             ],
           ),
@@ -80,7 +81,8 @@ class ObservationTypeScreen extends ConsumerWidget {
             onPressed: selected == null
                 ? null
                 : () => Navigator.of(context).push(
-                      MaterialPageRoute<void>(builder: (_) => const SeverityScreen()),
+                      MaterialPageRoute<void>(
+                          builder: (_) => const SeverityScreen()),
                     ),
             child: Text(l10n.translate('action.next')),
           ),
@@ -111,7 +113,9 @@ class _ObservationTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
-          color: selected ? AppColors.seed.withValues(alpha: 0.15) : AppColors.glass,
+          color: selected
+              ? AppColors.seed.withValues(alpha: 0.15)
+              : AppColors.glass,
           borderRadius: BorderRadius.circular(AppRadii.md),
           border: Border.all(
             color: selected ? AppColors.seed : AppColors.edge,

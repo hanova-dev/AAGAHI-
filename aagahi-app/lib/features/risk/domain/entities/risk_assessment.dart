@@ -160,7 +160,8 @@ final class RiskAssessment extends Equatable {
   /// in the UI, visually and audibly (FR-SYNC-002).
   Duration ageAsOf(DateTime now) => now.difference(assessedOn);
 
-  bool isStaleAsOf(DateTime now, {Duration threshold = const Duration(days: 3)}) =>
+  bool isStaleAsOf(DateTime now,
+          {Duration threshold = const Duration(days: 3)}) =>
       ageAsOf(now) > threshold;
 
   /// Qualitative confidence, for display. Never a raw percentage - a farmer

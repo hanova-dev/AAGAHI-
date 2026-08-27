@@ -16,7 +16,8 @@ Response<T> _response<T>(T? data, {int statusCode = 200}) => Response<T>(
 
 DioException _errorWithResponse(int statusCode) => DioException(
       requestOptions: RequestOptions(path: _path),
-      response: Response(requestOptions: RequestOptions(path: _path), statusCode: statusCode),
+      response: Response(
+          requestOptions: RequestOptions(path: _path), statusCode: statusCode),
     );
 
 DioException get _connectionFailure => DioException(
@@ -92,7 +93,8 @@ void main() {
     );
 
     test('401 throws AuthException', () async {
-      when(() => dio.get<Map<String, dynamic>>(any())).thenThrow(_errorWithResponse(401));
+      when(() => dio.get<Map<String, dynamic>>(any()))
+          .thenThrow(_errorWithResponse(401));
 
       await expectLater(
         () => dataSource.fetchLatestAssessment('p1'),
@@ -101,7 +103,8 @@ void main() {
     });
 
     test('403 throws AuthException', () async {
-      when(() => dio.get<Map<String, dynamic>>(any())).thenThrow(_errorWithResponse(403));
+      when(() => dio.get<Map<String, dynamic>>(any()))
+          .thenThrow(_errorWithResponse(403));
 
       await expectLater(
         () => dataSource.fetchLatestAssessment('p1'),
@@ -109,17 +112,23 @@ void main() {
       );
     });
 
-    test('500 throws ServerException carrying the status code - never NotScorable', () async {
-      when(() => dio.get<Map<String, dynamic>>(any())).thenThrow(_errorWithResponse(500));
+    test(
+        '500 throws ServerException carrying the status code - never NotScorable',
+        () async {
+      when(() => dio.get<Map<String, dynamic>>(any()))
+          .thenThrow(_errorWithResponse(500));
 
       await expectLater(
         () => dataSource.fetchLatestAssessment('p1'),
-        throwsA(isA<ServerException>().having((e) => e.statusCode, 'statusCode', 500)),
+        throwsA(isA<ServerException>()
+            .having((e) => e.statusCode, 'statusCode', 500)),
       );
     });
 
-    test('a connection timeout with no response throws NetworkException', () async {
-      when(() => dio.get<Map<String, dynamic>>(any())).thenThrow(_connectionFailure);
+    test('a connection timeout with no response throws NetworkException',
+        () async {
+      when(() => dio.get<Map<String, dynamic>>(any()))
+          .thenThrow(_connectionFailure);
 
       await expectLater(
         () => dataSource.fetchLatestAssessment('p1'),
@@ -127,8 +136,10 @@ void main() {
       );
     });
 
-    test('an empty 200 body throws FormatException rather than a null crash', () async {
-      when(() => dio.get<Map<String, dynamic>>(any())).thenAnswer((_) async => _response(null));
+    test('an empty 200 body throws FormatException rather than a null crash',
+        () async {
+      when(() => dio.get<Map<String, dynamic>>(any()))
+          .thenAnswer((_) async => _response(null));
 
       await expectLater(
         () => dataSource.fetchLatestAssessment('p1'),

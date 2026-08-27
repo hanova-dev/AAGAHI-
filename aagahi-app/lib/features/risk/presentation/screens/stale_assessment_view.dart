@@ -42,7 +42,8 @@ class StaleAssessmentView extends ConsumerWidget {
               children: [
                 TextSpan(
                   text: '${l10n.translate('offline.noInternetTitle')} ',
-                  style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.ink),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w700, color: AppColors.ink),
                 ),
                 TextSpan(text: l10n.translate('offline.noInternetBody')),
               ],
@@ -53,7 +54,8 @@ class StaleAssessmentView extends ConsumerWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(l10n.parcelName(assessment.parcelId), style: Theme.of(context).textTheme.bodySmall),
+            Text(l10n.parcelName(assessment.parcelId),
+                style: Theme.of(context).textTheme.bodySmall),
             _AgeChip(text: '$ageDays ${l10n.translate('common.daysOld')}'),
           ],
         ),
@@ -74,7 +76,9 @@ class StaleAssessmentView extends ConsumerWidget {
                   size: 200,
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                BandChip(band: assessment.band, label: l10n.bandLabel(assessment.band)),
+                BandChip(
+                    band: assessment.band,
+                    label: l10n.bandLabel(assessment.band)),
               ],
             ),
           ),

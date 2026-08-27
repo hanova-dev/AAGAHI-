@@ -28,7 +28,8 @@ class _PhotoScreenState extends ConsumerState<PhotoScreen> {
   Future<void> _pick(ImageSource source) async {
     setState(() => _pickError = null);
     try {
-      final file = await ImagePicker().pickImage(source: source, imageQuality: 70);
+      final file =
+          await ImagePicker().pickImage(source: source, imageQuality: 70);
       if (file == null) return; // user cancelled - not an error
       ref.read(fieldReportDraftProvider.notifier).setPhoto(file.path);
     } catch (_) {
@@ -72,7 +73,8 @@ class _PhotoScreenState extends ConsumerState<PhotoScreen> {
                 color: AppColors.glass,
                 child: photoPath == null
                     ? const Center(
-                        child: Icon(Icons.image_outlined, size: 48, color: AppColors.ink3),
+                        child: Icon(Icons.image_outlined,
+                            size: 48, color: AppColors.ink3),
                       )
                     : Image.file(File(photoPath), fit: BoxFit.cover),
               ),
@@ -115,7 +117,8 @@ class _PhotoScreenState extends ConsumerState<PhotoScreen> {
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(builder: (_) => const ReviewScreen()),
               ),
-              child: Text(l10n.translate(photoPath == null ? 'action.skip' : 'action.next')),
+              child: Text(l10n.translate(
+                  photoPath == null ? 'action.skip' : 'action.next')),
             ),
           ],
         ),

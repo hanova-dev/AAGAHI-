@@ -37,7 +37,8 @@ class _AppShellState extends ConsumerState<AppShell> {
     ];
 
     return Scaffold(
-      body: SafeArea(bottom: false, child: IndexedStack(index: _index, children: pages)),
+      body: SafeArea(
+          bottom: false, child: IndexedStack(index: _index, children: pages)),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         backgroundColor: AppColors.soil2,
@@ -54,7 +55,8 @@ class _AppShellState extends ConsumerState<AppShell> {
           ),
           NavigationDestination(
             icon: const Icon(Icons.notifications_outlined),
-            selectedIcon: const Icon(Icons.notifications, color: AppColors.seed),
+            selectedIcon:
+                const Icon(Icons.notifications, color: AppColors.seed),
             label: l10n.translate('nav.warnings'),
           ),
           NavigationDestination(
@@ -63,7 +65,8 @@ class _AppShellState extends ConsumerState<AppShell> {
             label: l10n.translate('nav.report'),
           ),
           NavigationDestination(
-            icon: const Opacity(opacity: 0.35, child: Icon(Icons.settings_outlined)),
+            icon: const Opacity(
+                opacity: 0.35, child: Icon(Icons.settings_outlined)),
             label: l10n.translate('nav.settings'),
           ),
         ],
