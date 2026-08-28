@@ -1,4 +1,4 @@
-import 'package:drift/drift.dart' show Value;
+import 'package:drift/drift.dart' show OrderingTerm, Value;
 
 import '../../../../core/database/app_database.dart';
 import '../../../../core/error/exceptions.dart';
@@ -33,4 +33,24 @@ final class FieldReportLocalDataSourceImpl
   @override
   Stream<int> watchSavedCount() =>
       _db.select(_db.fieldReportRows).watch().map((rows) => rows.length);
+
+  @override
+  Stream<List<FieldReport>> watchAll() {
+    return (_db.select(_db.fieldReportRows)
+          ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
+        .watch()
+        .map((rows) => rows.map(_toEntity).toList(growable: false));
+  }
+
+  FieldReport _toEntity(FieldReportRow row) => FieldReport(
+        id: row.id,
+        parcelId: row.parcelId,
+        observationType: ObservationType.values.byName(row.observationType),
+        severity: row.severity,
+        createdAt: row.createdAt,
+        // The only wire value ever written today - see SyncState's own
+        // doc comment on why there is nothing else to parse yet.
+        syncState: SyncState.localOnly,
+        photoPath: row.photoPath,
+      );
 }

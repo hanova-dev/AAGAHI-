@@ -2,7 +2,10 @@ import 'package:aagahi/features/parcel_registration/domain/entities/parcel.dart'
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  Parcel build({double areaAcres = 3.5, WaterSource waterSource = WaterSource.canal}) => Parcel(
+  Parcel build(
+          {double areaAcres = 3.5,
+          WaterSource waterSource = WaterSource.canal}) =>
+      Parcel(
         id: 'p1',
         areaAcres: areaAcres,
         cropId: 'wheat',

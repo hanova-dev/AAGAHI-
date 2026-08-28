@@ -30,7 +30,9 @@ class LanguageScreen extends ConsumerWidget {
     // implementation does. A safe cast here is simpler than adding an
     // interface member every other implementation would have to define
     // too, for a question only this one screen ever asks.
-    final isUrdu = current is InMemoryLocalisations ? current.locale == BuiltinLocale.ur : true;
+    final isUrdu = current is InMemoryLocalisations
+        ? current.locale == BuiltinLocale.ur
+        : true;
 
     void selectAndAdvance(BuiltinLocale locale) {
       ref.read(localisationProvider.notifier).state =

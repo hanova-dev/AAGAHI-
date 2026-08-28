@@ -7,4 +7,6 @@ abstract interface class FieldReportLocalDataSource {
   Future<void> insert(FieldReport report);
 
   Stream<int> watchSavedCount();
+
+  Stream<List<FieldReport>> watchAll();
 }

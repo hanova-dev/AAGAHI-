@@ -40,14 +40,20 @@ final class InMemoryLocalisations implements AppLocalisations {
     // (which never surfaces them) or in repository-level tests (which
     // never render them) - a real non-demo run against the unreachable
     // placeholder backend is what first exposed these as missing.
-    'failure.network': (en: 'No internet connection', ur: 'انٹرنیٹ کنکشن نہیں ہے'),
+    'failure.network': (
+      en: 'No internet connection',
+      ur: 'انٹرنیٹ کنکشن نہیں ہے'
+    ),
     'failure.network.detail': (
       en: 'We could not reach the server, and nothing is cached yet for '
           'this field.',
       ur: 'ہم سرور تک نہیں پہنچ سکے، اور اس کھیت کے لیے ابھی کچھ محفوظ '
           'شدہ نہیں ہے۔',
     ),
-    'failure.server': (en: 'Something went wrong on our end', ur: 'ہماری طرف کچھ غلط ہوا ہے'),
+    'failure.server': (
+      en: 'Something went wrong on our end',
+      ur: 'ہماری طرف کچھ غلط ہوا ہے'
+    ),
     'failure.server.detail': (
       en: 'Please try again in a few minutes.',
       ur: 'براہ کرم چند منٹ بعد دوبارہ کوشش کریں۔',
@@ -57,7 +63,10 @@ final class InMemoryLocalisations implements AppLocalisations {
       en: 'Please sign in again to continue.',
       ur: 'جاری رکھنے کے لیے دوبارہ سائن ان کریں۔',
     ),
-    'failure.cache': (en: 'Nothing saved on this phone yet', ur: 'ابھی اس فون میں کچھ محفوظ نہیں'),
+    'failure.cache': (
+      en: 'Nothing saved on this phone yet',
+      ur: 'ابھی اس فون میں کچھ محفوظ نہیں'
+    ),
     'failure.cache.detail': (
       en: 'Connect to the internet at least once to load this field.',
       ur: 'اس کھیت کو لوڈ کرنے کے لیے کم از کم ایک بار انٹرنیٹ سے جڑیں۔',
@@ -624,6 +633,275 @@ final class InMemoryLocalisations implements AppLocalisations {
     'crop.watermelon': (en: 'Watermelon', ur: 'تربوز'),
     'crop.melon': (en: 'Melon', ur: 'خربوزہ'),
     'crop.olive': (en: 'Olive', ur: 'زیتون'),
+    // Flow H - settings (screens_v2.html)
+    'settings.title': (en: 'Settings', ur: 'ترتیبات'),
+    'settings.notRegisteredYet': (
+      en: 'Not registered yet',
+      ur: 'ابھی رجسٹرڈ نہیں'
+    ),
+    'settings.phoneNotSet': (en: 'Phone not set', ur: 'فون نمبر درج نہیں'),
+    'settings.languageAndVoice': (
+      en: 'Language and voice',
+      ur: 'زبان اور آواز'
+    ),
+    'settings.warningChannels': (
+      en: 'How warnings reach me',
+      ur: 'وارننگز مجھ تک کیسے پہنچیں'
+    ),
+    'settings.myFields': (en: 'My fields', ur: 'میرے کھیت'),
+    'settings.myFieldsCount': (en: '{count} field', ur: '{count} کھیت'),
+    'settings.myFieldsCountZero': (
+      en: 'No fields yet',
+      ur: 'ابھی کوئی کھیت نہیں'
+    ),
+    'settings.dataAndPrivacy': (
+      en: 'My data and privacy',
+      ur: 'میرا ڈیٹا اور رازداری'
+    ),
+    'settings.sources': (
+      en: 'Where our data comes from',
+      ur: 'ہمارا ڈیٹا کہاں سے آتا ہے'
+    ),
+    'settings.cannotDo': (
+      en: 'What this app cannot do',
+      ur: 'یہ ایپ کیا نہیں کر سکتی'
+    ),
+    'settings.syncStatus': (en: 'Sync status', ur: 'سنک کی صورتحال'),
+    'settings.autoplayOn': (en: 'autoplay on', ur: 'خودکار چلنا آن ہے'),
+    'settings.autoplayOff': (en: 'autoplay off', ur: 'خودکار چلنا آف ہے'),
+    'settings.whatsappFirst': (en: 'WhatsApp first', ur: 'پہلے واٹس ایپ'),
+    'settings.quietRange': (
+      en: 'quiet {start}-{end}',
+      ur: 'خاموشی {start}-{end}'
+    ),
+    // H2 - language and voice
+    'settings.languageSection': (en: 'LANGUAGE', ur: 'زبان'),
+    'settings.voiceSection': (en: 'VOICE', ur: 'آواز'),
+    'settings.readScreensAloud': (
+      en: 'Read screens aloud',
+      ur: 'اسکرینیں پڑھ کر سنائیں'
+    ),
+    'settings.readScreensAloudSubtitle': (
+      en: 'Starts automatically',
+      ur: 'خودکار طور پر شروع ہوتا ہے',
+    ),
+    'settings.slowerSpeech': (en: 'Slower speech', ur: 'آہستہ بولنا'),
+    'settings.slowerSpeechSubtitle': (
+      en: 'For clearer listening',
+      ur: 'واضح سننے کے لیے'
+    ),
+    'settings.biggerText': (en: 'Bigger text', ur: 'بڑا حروف'),
+    'settings.biggerTextSubtitle': (
+      en: '200% size supported',
+      ur: '200% سائز معاون ہے'
+    ),
+    'action.hearSample': (en: 'Hear a sample', ur: 'نمونہ سنیں'),
+    // H3 - warning channels & quiet hours
+    'settings.channelsIntro': (
+      en: 'We try these in order until one works.',
+      ur: 'ہم انہیں ترتیب سے آزماتے ہیں جب تک ایک کام نہ کرے۔',
+    ),
+    'settings.channel.whatsapp': (en: 'WhatsApp', ur: 'واٹس ایپ'),
+    'settings.channel.appNotification': (
+      en: 'App notification',
+      ur: 'ایپ اطلاع'
+    ),
+    'settings.channel.sms': (en: 'SMS', ur: 'ایس ایم ایس'),
+    'settings.channel.voiceCall': (en: 'Voice call', ur: 'صوتی کال'),
+    'settings.quietHours': (en: 'QUIET HOURS', ur: 'خاموشی کے اوقات'),
+    'settings.noMessagesBetween': (
+      en: 'No messages between',
+      ur: 'ان اوقات میں کوئی پیغام نہیں'
+    ),
+    'settings.maxWarningsBanner': (
+      en: 'Never more than 4 warnings a week.',
+      ur: 'ہفتے میں کبھی بھی 4 سے زیادہ وارننگز نہیں۔',
+    ),
+    // H4 - data & privacy
+    'settings.whatWeKeep': (en: 'What we keep', ur: 'ہم کیا رکھتے ہیں'),
+    'settings.whatWeKeepBody': (
+      en: 'Your number, your fields, and the reports you send. Nothing '
+          'else. We never look at your contacts or your other apps.',
+      ur: 'آپ کا نمبر، آپ کے کھیت، اور آپ کی بھیجی گئی رپورٹس۔ اور کچھ '
+          'نہیں۔ ہم کبھی آپ کے رابطے یا دیگر ایپس نہیں دیکھتے۔',
+    ),
+    'settings.whoCanSeeLocation': (
+      en: 'Who can see your field location',
+      ur: 'آپ کے کھیت کا مقام کون دیکھ سکتا ہے',
+    ),
+    'settings.whoCanSeeLocationBody': (
+      en: 'Only you. Officers see district totals, never your exact point.',
+      ur: 'صرف آپ۔ افسران ضلعی کل تعداد دیکھتے ہیں، کبھی آپ کا عین مقام نہیں۔',
+    ),
+    'settings.downloadMyData': (
+      en: 'Download my data',
+      ur: 'میرا ڈیٹا ڈاؤن لوڈ کریں'
+    ),
+    'settings.readPrivacyNotice': (
+      en: 'Read the privacy notice',
+      ur: 'رازداری کا نوٹس پڑھیں',
+    ),
+    'settings.readPrivacyNoticeSubtitle': (
+      en: 'Urdu · also as audio',
+      ur: 'اردو · آواز میں بھی'
+    ),
+    'settings.deleteAccount': (
+      en: 'Delete my account',
+      ur: 'میرا اکاؤنٹ حذف کریں'
+    ),
+    'settings.deleteAccountSubtitle': (
+      en: 'Erases everything saved on this phone',
+      ur: 'اس فون میں محفوظ ہر چیز مٹا دیتا ہے',
+    ),
+    'settings.neverSellData': (
+      en: 'We never sell your data. Not to anyone.',
+      ur: 'ہم آپ کا ڈیٹا کبھی نہیں بیچتے۔ کسی کو بھی نہیں۔',
+    ),
+    'settings.notAvailableYet': (
+      en: 'Not available in this build yet.',
+      ur: 'یہ ابھی اس ورژن میں دستیاب نہیں ہے۔',
+    ),
+    'settings.deleteConfirmTitle': (
+      en: 'Delete everything on this phone?',
+      ur: 'اس فون سے سب کچھ حذف کریں؟'
+    ),
+    'settings.deleteConfirmBody': (
+      en: 'This erases your field, your reports, and your settings from '
+          'this phone. This cannot be undone.',
+      ur: 'یہ آپ کا کھیت، آپ کی رپورٹس، اور آپ کی ترتیبات اس فون سے مٹا '
+          'دے گا۔ اسے واپس نہیں لایا جا سکتا۔',
+    ),
+    'action.deleteForever': (en: 'Delete everything', ur: 'سب کچھ حذف کریں'),
+    'action.cancel': (en: 'Cancel', ur: 'منسوخ کریں'),
+    // H5 - sources & licences
+    'settings.source.smap': (en: 'NASA SMAP', ur: 'ناسا SMAP'),
+    'settings.source.smapDesc': (
+      en: 'Soil moisture · public domain',
+      ur: 'مٹی کی نمی · عوامی ڈومین'
+    ),
+    'settings.source.era5': (
+      en: 'ERA5-Land · Copernicus',
+      ur: 'ERA5-Land · کوپرنیکس'
+    ),
+    'settings.source.era5Desc': (
+      en: 'Temperature and humidity',
+      ur: 'درجہ حرارت اور نمی'
+    ),
+    'settings.source.tropomi': (
+      en: 'Sentinel-5P TROPOMI',
+      ur: 'Sentinel-5P TROPOMI'
+    ),
+    'settings.source.tropomiDesc': (
+      en: 'Plant stress signal (SIF)',
+      ur: 'پودوں کے دباؤ کا اشارہ (SIF)',
+    ),
+    'settings.source.chirps': (en: 'CHIRPS', ur: 'CHIRPS'),
+    'settings.source.chirpsDesc': (
+      en: 'Rainfall · UCSB/USGS',
+      ur: 'بارش · UCSB/USGS'
+    ),
+    'settings.source.modis': (en: 'MODIS', ur: 'MODIS'),
+    'settings.source.modisDesc': (
+      en: 'Greenness · fallback only',
+      ur: 'ہریالی · صرف متبادل کے طور پر'
+    ),
+    'settings.openSourceCredits': (
+      en: 'Open-source: Flutter (BSD-3), LightGBM (MIT), SHAP (MIT), '
+          'Noto Nastaliq Urdu (OFL 1.1).',
+      ur: 'اوپن سورس: Flutter (BSD-3)، LightGBM (MIT)، SHAP (MIT)، Noto '
+          'Nastaliq Urdu (OFL 1.1)۔',
+    ),
+    // H6 - what this app cannot do
+    'settings.cannotDo.rain': (
+      en: 'It cannot tell you whether it will rain.',
+      ur: 'یہ نہیں بتا سکتی کہ بارش ہو گی یا نہیں۔',
+    ),
+    'settings.cannotDo.cropFate': (
+      en: 'It cannot promise your crop will fail, or that it will survive.',
+      ur: 'یہ ضمانت نہیں دے سکتی کہ آپ کی فصل خراب ہو گی یا بچ جائے گی۔',
+    ),
+    'settings.cannotDo.replaceDept': (
+      en: 'It does not replace the Agriculture Department. Follow their '
+          'advice too.',
+      ur: 'یہ محکمہ زراعت کا متبادل نہیں ہے۔ ان کے مشورے پر بھی عمل کریں۔',
+    ),
+    'settings.cannotDo.wrongBefore': (
+      en: 'It is sometimes wrong. It has missed real droughts and raised '
+          'false alarms.',
+      ur: 'یہ کبھی کبھار غلط ہوتی ہے۔ اس نے حقیقی خشک سالیاں چھوڑی ہیں اور '
+          'جھوٹے الارم بھی دیے ہیں۔',
+    ),
+    'settings.cannotDo.silentWhenBlind': (
+      en: 'It says nothing when the satellites give us nothing.',
+      ur: 'جب سیٹلائٹ کچھ نہیں دیتے تو یہ بھی کچھ نہیں کہتی۔',
+    ),
+    'settings.performanceTitle': (
+      en: 'How well it has done so far',
+      ur: 'اب تک اس کی کارکردگی کیسی رہی',
+    ),
+    'settings.performanceCaught': (
+      en: 'Caught 7 of 10 real drying events',
+      ur: '10 میں سے 7 حقیقی خشکی کے واقعات پکڑے',
+    ),
+    'settings.performanceFalseAlarm': (
+      en: '3 of every 10 warnings were false alarms. Measured on 2024-2025 '
+          'data in this district.',
+      ur: 'ہر 10 وارننگز میں سے 3 جھوٹے الارم تھے۔ اس ضلعے کے 2024-2025 '
+          'کے ڈیٹا پر ماپا گیا۔',
+    ),
+    'settings.versionFooter': (
+      en: 'Version 1.0 · model v2026.08',
+      ur: 'ورژن 1.0 · ماڈل v2026.08'
+    ),
+    // Flow G - sync & conflicts
+    'sync.title': (en: 'Sync status', ur: 'سنک کی صورتحال'),
+    'sync.localOnlySummary': (
+      en: '{count} saved on this phone',
+      ur: '{count} اس فون میں محفوظ ہیں',
+    ),
+    'sync.allLocalNote': (
+      en: 'There is no sync yet - everything stays on this phone until '
+          'that is built.',
+      ur: 'ابھی سنک موجود نہیں - جب تک یہ نہ بن جائے سب کچھ اس فون میں '
+          'رہے گا۔',
+    ),
+    'sync.savedOnPhone': (en: 'Saved on this phone', ur: 'اس فون میں محفوظ'),
+    'sync.neverAutoDeleted': (
+      en: 'Reports are never deleted automatically.',
+      ur: 'رپورٹس کبھی خودکار طور پر حذف نہیں ہوتیں۔',
+    ),
+    'sync.seeConflictDemo': (
+      en: 'See how conflicts will be resolved',
+      ur: 'دیکھیں تنازعات کیسے حل ہوں گے',
+    ),
+    'sync.noReportsYet': (
+      en: 'No field reports saved yet.',
+      ur: 'ابھی کوئی فیلڈ رپورٹ محفوظ نہیں۔'
+    ),
+    'sync.conflictBanner': (
+      en: 'Two different versions of this field exist.',
+      ur: 'اس کھیت کے دو مختلف ورژن موجود ہیں۔',
+    ),
+    'sync.conflictTitle': (en: 'Which one is correct?', ur: 'کون سا درست ہے؟'),
+    'sync.conflictBody': (
+      en: 'You changed this on your phone. Someone also changed it '
+          'elsewhere.',
+      ur: 'آپ نے اسے اپنے فون پر تبدیل کیا۔ کسی نے اسے کہیں اور بھی تبدیل کیا۔',
+    ),
+    'sync.onThisPhone': (en: 'On this phone', ur: 'اس فون پر'),
+    'sync.onTheServer': (en: 'On the server', ur: 'سرور پر'),
+    'sync.seededNote': (
+      en: 'This is a seeded example - there is no real conflict source yet.',
+      ur: 'یہ ایک نمونہ مثال ہے - ابھی کوئی حقیقی تنازعہ کا ذریعہ نہیں ہے۔',
+    ),
+    'action.keepMyPhoneVersion': (
+      en: "Keep my phone's version",
+      ur: 'میرے فون کا ورژن رکھیں'
+    ),
+    'action.keepServerVersion': (
+      en: 'Keep the server version',
+      ur: 'سرور کا ورژن رکھیں'
+    ),
     // C4 - offline / stale (screens_v2.html flow C)
     'offline.noInternetTitle': (en: 'No internet.', ur: 'انٹرنیٹ نہیں ہے۔'),
     'offline.noInternetBody': (

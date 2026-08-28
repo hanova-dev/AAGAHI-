@@ -30,4 +30,7 @@ final class FieldReportRepositoryImpl implements FieldReportRepository {
 
   @override
   Stream<int> watchSavedCount() => _local.watchSavedCount();
+
+  @override
+  Stream<List<FieldReport>> watchAll() => _local.watchAll();
 }

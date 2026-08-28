@@ -12,4 +12,9 @@ abstract interface class FieldReportRepository {
   /// Total reports saved on this device, for F6's confirmation count - a
   /// real number read back from the database, not a decorative one.
   Stream<int> watchSavedCount();
+
+  /// Every saved report, newest first - G1 (sync status) lists these as
+  /// the real content behind "N saved on this phone," not a fabricated
+  /// per-item list.
+  Stream<List<FieldReport>> watchAll();
 }

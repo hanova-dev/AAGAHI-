@@ -42,7 +42,8 @@ void main() {
     repository = ParcelRepositoryImpl(local: local);
   });
 
-  test('getFirstParcel returns null when nothing is registered yet - this '
+  test(
+      'getFirstParcel returns null when nothing is registered yet - this '
       'is exactly what tells main.dart to show onboarding', () async {
     final result = await repository.getFirstParcel();
 
@@ -67,7 +68,8 @@ void main() {
     expect(result, Right<Failure, Parcel?>(parcel));
   });
 
-  test('a local failure surfaces as CacheFailure, never a silent drop', () async {
+  test('a local failure surfaces as CacheFailure, never a silent drop',
+      () async {
     local.shouldThrow = true;
 
     final saveResult = await repository.save(buildParcel());

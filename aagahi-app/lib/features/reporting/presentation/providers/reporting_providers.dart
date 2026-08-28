@@ -16,6 +16,12 @@ final savedReportsCountProvider = StreamProvider.autoDispose<int>(
   (ref) => ref.watch(fieldReportRepositoryProvider).watchSavedCount(),
 );
 
+/// Every saved report, newest first - G1 (sync status) lists these as the
+/// real content behind "N saved on this phone."
+final allFieldReportsProvider = StreamProvider.autoDispose<List<FieldReport>>(
+  (ref) => ref.watch(fieldReportRepositoryProvider).watchAll(),
+);
+
 /// In-progress answers for the F1-F5 wizard. Nothing here is persisted
 /// until F5 calls `FieldReportRepository.save` - this is UI state, not a
 /// draft the database knows about.

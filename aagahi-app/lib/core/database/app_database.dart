@@ -67,7 +67,29 @@ class ParcelRows extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-@DriftDatabase(tables: [RiskAssessmentRows, FieldReportRows, ParcelRows])
+/// The one settings row for this device (flow H). A fixed, known [id]
+/// rather than autoincrement, because there is exactly one row, ever -
+/// `SettingsLocalDataSourceImpl` upserts onto this same id every time.
+class AppSettingsRows extends Table {
+  TextColumn get id => text()();
+  TextColumn get phoneNumber => text().nullable()();
+  BoolColumn get voiceAutoplay => boolean()();
+  BoolColumn get voiceSlower => boolean()();
+  BoolColumn get biggerText => boolean()();
+  BoolColumn get whatsappEnabled => boolean()();
+  BoolColumn get appNotificationEnabled => boolean()();
+  BoolColumn get smsEnabled => boolean()();
+  BoolColumn get voiceCallEnabled => boolean()();
+  TextColumn get quietHoursStart => text()();
+  TextColumn get quietHoursEnd => text()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+@DriftDatabase(
+  tables: [RiskAssessmentRows, FieldReportRows, ParcelRows, AppSettingsRows],
+)
 class AppDatabase extends _$AppDatabase {
   /// [executor] is injected rather than opened internally so tests can point
   /// at a temp file with a fixed key, without going through
@@ -75,7 +97,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -87,8 +109,22 @@ class AppDatabase extends _$AppDatabase {
           if (from < 3) {
             await m.createTable(parcelRows);
           }
+          if (from < 4) {
+            await m.createTable(appSettingsRows);
+          }
         },
       );
+
+  /// H4's "Delete my account": every table, in one transaction. There is
+  /// no server copy to also clear - no backend exists yet - so this local
+  /// wipe is the entire real effect of that button (CLAUDE.md S1: it must
+  /// actually happen, not just show a confirmation and quietly do nothing).
+  Future<void> wipeAllData() => transaction(() async {
+        await delete(riskAssessmentRows).go();
+        await delete(fieldReportRows).go();
+        await delete(parcelRows).go();
+        await delete(appSettingsRows).go();
+      });
 }
 
 /// Opens (or creates) the encrypted database file at [fileName] under the

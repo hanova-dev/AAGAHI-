@@ -32,7 +32,8 @@ class LocationPermissionScreen extends ConsumerWidget {
     if (!context.mounted) return;
     unawaited(
       Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => const MicrophonePermissionScreen()),
+        MaterialPageRoute<void>(
+            builder: (_) => const MicrophonePermissionScreen()),
       ),
     );
   }

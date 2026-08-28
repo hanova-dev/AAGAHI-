@@ -18,6 +18,9 @@ class _FakeLocalDataSource implements FieldReportLocalDataSource {
 
   @override
   Stream<int> watchSavedCount() => Stream.value(inserted.length);
+
+  @override
+  Stream<List<FieldReport>> watchAll() => Stream.value(List.of(inserted));
 }
 
 void main() {
@@ -62,5 +65,12 @@ void main() {
     await repository.save(buildReport());
 
     expect(await repository.watchSavedCount().first, 1);
+  });
+
+  test('watchAll returns the real saved reports, for G1 to list', () async {
+    final report = buildReport();
+    await repository.save(report);
+
+    expect(await repository.watchAll().first, [report]);
   });
 }

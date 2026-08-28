@@ -21,6 +21,9 @@ import 'features/risk/data/datasources/risk_local_data_source_impl.dart';
 import 'features/risk/data/datasources/risk_remote_data_source_impl.dart';
 import 'features/risk/data/repositories/risk_repository_impl.dart';
 import 'features/risk/presentation/providers/risk_providers.dart';
+import 'features/settings/data/datasources/settings_local_data_source_impl.dart';
+import 'features/settings/data/repositories/settings_repository_impl.dart';
+import 'features/settings/presentation/providers/settings_providers.dart';
 
 /// Set only via `--dart-define=DEMO=true`, never a default in source - a
 /// demo build must be requested explicitly, not fallen into.
@@ -66,6 +69,9 @@ Future<void> main() async {
   final parcelRepository = ParcelRepositoryImpl(
     local: ParcelLocalDataSourceImpl(database),
   );
+  final settingsRepository = SettingsRepositoryImpl(
+    local: SettingsLocalDataSourceImpl(database),
+  );
 
   final overrides = <Override>[
     localisationProvider.overrideWith((ref) => const InMemoryLocalisations()),
@@ -74,6 +80,7 @@ Future<void> main() async {
           local: FieldReportLocalDataSourceImpl(database)),
     ),
     parcelRepositoryProvider.overrideWithValue(parcelRepository),
+    settingsRepositoryProvider.overrideWithValue(settingsRepository),
   ];
 
   var needsOnboarding = false;
@@ -117,18 +124,40 @@ Future<void> main() async {
   );
 }
 
-class AagahiApp extends StatelessWidget {
+/// H2's "Bigger text" toggle is the one voice-adjacent setting with a real,
+/// visible effect this phase: this is the `builder` that actually applies
+/// it, app-wide, the moment the toggle changes - not just after a restart.
+/// 2.0 matches the exact scale `RiskRing`'s own golden tests already
+/// validate (`risk_ring_golden_test.dart`), not a number invented for this
+/// screen.
+class AagahiApp extends ConsumerWidget {
   const AagahiApp({required this.showOnboarding, super.key});
 
   final bool showOnboarding;
 
+  static const _biggerTextScale = 2.0;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final biggerText =
+        ref.watch(settingsStreamProvider).valueOrNull?.biggerText ?? false;
+
     return MaterialApp(
       title: 'AAGAHI',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.dark(),
       darkTheme: AppTheme.dark(),
+      builder: (context, child) {
+        if (!biggerText || child == null) {
+          return child ?? const SizedBox.shrink();
+        }
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: const TextScaler.linear(_biggerTextScale),
+          ),
+          child: child,
+        );
+      },
       home: showOnboarding ? const SplashScreen() : const AppShell(),
     );
   }

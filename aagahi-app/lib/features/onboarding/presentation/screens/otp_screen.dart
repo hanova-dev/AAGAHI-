@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../risk/presentation/providers/risk_providers.dart';
+import '../../../settings/presentation/providers/settings_providers.dart';
 import 'role_screen.dart';
 
 /// Screen A8 (screens_v2.html flow A) - OTP verification.
@@ -15,6 +18,10 @@ import 'role_screen.dart';
 /// is dropped for the OS's own numeric keyboard: it already does this, so
 /// building a second one would be exactly the "stop and justify it" case
 /// CLAUDE.md's minimalism rule warns about.
+///
+/// "Verify" is also where the phone number is actually persisted (H1 needs
+/// it later) - not on A7's "Confirm number", since that step only moves to
+/// this screen, it doesn't yet treat the number as accepted.
 class OtpScreen extends StatefulWidget {
   const OtpScreen({required this.phoneNumber, super.key});
 
@@ -31,6 +38,20 @@ class _OtpScreenState extends State<OtpScreen> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  Future<void> _verify(BuildContext context, WidgetRef ref) async {
+    final current =
+        await ref.read(settingsRepositoryProvider).watchSettings().first;
+    await ref.read(settingsRepositoryProvider).save(
+          current.copyWith(phoneNumber: widget.phoneNumber),
+        );
+    if (!context.mounted) return;
+    unawaited(
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (_) => const RoleScreen()),
+      ),
+    );
   }
 
   @override
@@ -90,12 +111,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: FilledButton(
-                      onPressed: canVerify
-                          ? () => Navigator.of(context).push(
-                                MaterialPageRoute<void>(
-                                    builder: (_) => const RoleScreen()),
-                              )
-                          : null,
+                      onPressed: canVerify ? () => _verify(context, ref) : null,
                       child: Text(l10n.translate('action.verify')),
                     ),
                   ),
